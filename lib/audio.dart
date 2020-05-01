@@ -32,21 +32,19 @@ class Audio {
       String subtitle = "",
       Duration position = Duration.zero,
       bool isLiveStream = false}) async {
-    if (_hasDataChanged(url, title, subtitle, position, isLiveStream)) {
-      this._url = url;
-      this._title = title;
-      this._subtitle = subtitle;
-      this._position = position;
-      this._isLiveStream = isLiveStream;
-      return _audioChannel.invokeMethod("play", <String, dynamic>{
-        "url": url,
-        "title": title,
-        "subtitle": subtitle,
-        "position": position.inMilliseconds,
-        "isLiveStream": isLiveStream,
-      });
+        this._url = url;
+        this._title = title;
+        this._subtitle = subtitle;
+        this._position = position;
+        this._isLiveStream = isLiveStream;
+        return _audioChannel.invokeMethod("play", <String, dynamic>{
+          "url": url,
+          "title": title,
+          "subtitle": subtitle,
+          "position": position.inMilliseconds,
+          "isLiveStream": isLiveStream,
+        });
     }
-  }
 
   bool _hasDataChanged(String url, String title, String subtitle,
       Duration position, bool isLiveStream) {
