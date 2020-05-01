@@ -11,6 +11,7 @@ class Audio {
   static Audio instance() {
     if (_instance == null) {
       _instance = Audio._();
+      _instance.pause();
     }
     return _instance;
   }

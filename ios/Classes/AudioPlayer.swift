@@ -130,7 +130,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             try audioSession.setActive(true)
         } catch _ { }
         
-        audioPlayer.pause()
+        //audioPlayer.pause()
         
         var validPlaybackUrl = false
         
