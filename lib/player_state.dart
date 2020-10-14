@@ -1,6 +1,9 @@
 /// Communicates the current state of the player.
 enum PlayerState {
 
+  /// Player is stopped TODO: will be deprecated!
+  STOPPED,
+
   /// Player is initialized
   INITIALIZED,
 
