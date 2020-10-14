@@ -8,6 +8,8 @@
 import Foundation
 import AVKit
 
+// TODO: seek is not needed anymore
+
 class FluterAVPlayer: AVPlayer {
     var flutterEventSink:FlutterEventSink?
     

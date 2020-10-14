@@ -7,7 +7,8 @@ public class SwiftFlutterPlayoutPlugin: NSObject, FlutterPlugin {
     
     /* register audio player */
     AudioPlayer.register(with: registrar)
-    
+
+    // TODO: video is not needed anymore
     /* register video player */
     VideoPlayerFactory.register(with: registrar)
   }

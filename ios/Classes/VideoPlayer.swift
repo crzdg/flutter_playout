@@ -11,6 +11,8 @@ import Flutter
 import MediaPlayer
 import AVKit
 
+// TODO: is not needed anymore
+
 class VideoPlayerFactory: NSObject, FlutterPlatformViewFactory {
     
     var videoPlayer:VideoPlayer?

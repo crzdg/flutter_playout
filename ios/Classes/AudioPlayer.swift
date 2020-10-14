@@ -10,6 +10,13 @@ import AVFoundation
 import Flutter
 import MediaPlayer
 
+// Swift player implements the interface audio.dart
+// The method handle, processes the methods invoked from audio.dart
+// TODO: implement, changeMediaInfo, changeRadioURL
+// changeMediaInfo: update the title and subtitle of the played media
+// changeRadioURL: stop the player, change the radio url, start player
+// TODO: refactor all other methods...
+
 class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     static func register(with registrar: FlutterPluginRegistrar) {
         

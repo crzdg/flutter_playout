@@ -97,7 +97,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
 
-            audioServiceBinder.startAudio(startPositionInMills);
+            audioServiceBinder.pauseAudio();
+
+            //audioServiceBinder.startAudio(startPositionInMills);
 
             doBindMediaNotificationManagerService();
         }
@@ -169,18 +171,12 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private void play(Object arguments) {
-
+    private void setMedia(Object arguments) {
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
 
         String newUrl = (String) args.get("url");
 
-        boolean mediaChanged = true;
-
-        if (this.audioURL != null) {
-
-            mediaChanged = !this.audioURL.equals(newUrl);
-        }
+        bindAudioService();
 
         this.audioURL = newUrl;
 
@@ -196,31 +192,53 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         if (audioServiceBinder != null) {
 
-            if (mediaChanged) {
+            try {
 
-                try {
+                audioServiceBinder.reset();
 
-                    audioServiceBinder.reset();
+            } catch (Exception e) { /* ignore */}
 
-                } catch (Exception e) { /* ignore */}
+        audioServiceBinder.setMediaChanging(true);
+        }
 
-                audioServiceBinder.setMediaChanging(true);
-            }
+        audioServiceBinder.setAudioFileUrl(this.audioURL);
 
-            audioServiceBinder.setAudioFileUrl(this.audioURL);
+        audioServiceBinder.setTitle(this.title);
 
-            audioServiceBinder.setTitle(this.title);
+        audioServiceBinder.setSubtitle(this.subtitle);
 
-            audioServiceBinder.setSubtitle(this.subtitle);
+        audioServiceBinder.setMedia();
+
+        notifyDartOnMediaSet();
+
+    }
+
+    private void notifyDartOnMediaSet() {
+        try {
+
+            JSONObject message = new JSONObject();
+
+            message.put("name", "onMediaSet");
+
+            eventSink.success(message);
+
+        } catch (Exception e) {
+
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
+    }
+
+
+    private void play(Object arguments) {
+
+        if (audioServiceBinder != null) {
 
             audioServiceBinder.startAudio(startPositionInMills);
 
-        } else {
-
-            bindAudioService();
         }
 
         notifyDartOnPlay();
+
     }
 
     private void pause() {
@@ -416,6 +434,11 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 result.success(true);
                 break;
             }
+            case "setMedia": {
+                setMedia(call.arguments);
+                result.success(true);
+                break;
+            }
             default:
                 result.notImplemented();
         }
@@ -477,6 +500,23 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PAUSE) {
 
                     service.notifyDartOnPause();
+
+
+                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PREPARED) {
+
+                    try {
+
+                        JSONObject message = new JSONObject();
+
+                        message.put("name", "onPrepared");
+
+                        service.eventSink.success(message);
+
+                    } catch (Exception e) {
+
+                        Log.e(service.TAG, "notifyDartOnPrepared: ", e);
+                    }
+
 
                 } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAY) {
 

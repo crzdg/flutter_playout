@@ -178,7 +178,7 @@ class _VideoState extends State<Video> {
       case PlayerState.PAUSED:
         _pausePlayback();
         break;
-      case PlayerState.STOPPED:
+      case PlayerState.READY:
         _pausePlayback();
         break;
     }

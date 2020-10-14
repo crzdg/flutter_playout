@@ -55,6 +55,7 @@ public class AudioServiceBinder
     final int UPDATE_PLAYER_STATE_TO_COMPLETE = 4;
     final int UPDATE_AUDIO_DURATION = 5;
     final int UPDATE_PLAYER_STATE_TO_ERROR = 6;
+    final int UPDATE_PLAYER_STATE_TO_PREPARED = 7;
     private boolean isPlayerReady = false;
     private boolean isBound = true;
 
@@ -67,9 +68,9 @@ public class AudioServiceBinder
 
     private String audioFileUrl = "";
 
-    private String title;
+    private String title = "";
 
-    private String subtitle;
+    private String subtitle = "";
 
     private MediaPlayer audioPlayer = null;
 
@@ -145,7 +146,7 @@ public class AudioServiceBinder
 
         this.startPositionInMills = startPositionInMills;
 
-        initAudioPlayer();
+        //initAudioPlayer(); TODO:
 
         if (audioPlayer != null && mMediaSessionCompat != null && mMediaSessionCompat.isActive()) {
 
@@ -190,6 +191,11 @@ public class AudioServiceBinder
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
         }
+    }
+
+    void setMedia(){
+        initAudioPlayer();
+        //pauseAudio();
     }
 
     void reset() {
@@ -373,6 +379,15 @@ public class AudioServiceBinder
         };
 
         updateAudioProgressThread.start();
+
+        // Create update audio progress message.
+        Message updateAudioProgressMsg = new Message();
+
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PREPARED;
+
+        // Send the message to caller activity's update audio progressbar Handler object.
+        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
     }
 
     @Override

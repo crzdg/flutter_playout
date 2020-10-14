@@ -1,4 +1,18 @@
-# AVPlayer for Flutter
+# Radio player for Flutter
+
+This Flutter plugin implements a simple radio audio player. The radios audio is fetched from a URL.
+It is possible to change the media info for the notifications center.
+
+## Methods for the MethodChannel
+
+- initRadioPlayer(): initialize the radio player. without setting up any media or media informations.
+- setUpRadio(url, title, subtitle, position): setUp URL and informations for the radio stream. should not do anything if player state is PLAY. otherwise change
+- changeMediaInfo(title, subtitle): change media information for the radio stream. should update all info boxes and notifications.
+- changeRadioURL(url): change the radio url. if the player is playing, it should be stopped. the player wont be started after setting the url.
+- play(): start the player.
+- pause(): pause the player.
+- reset(): reset the player. (pause, dispose, reinit)
+- dispose(): dispose the player. (pause, dispose)
 
 [![pub package](https://img.shields.io/pub/v/flutter_playout.svg)](https://pub.dartlang.org/packages/flutter_playout)
 

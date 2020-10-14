@@ -17,6 +17,12 @@ mixin PlayerObserver {
     eventChannel.receiveBroadcastStream().listen(_processEvent);
   }
 
+  /// Override this method to get notifications when media info has chagned
+  void onMediaInfoChange() { /* user implementation */ }
+
+  /// Override this method to get notifciations when radio url has changed
+  void onRadioURLChange()  { /* user implementation */ }
+
   /// Override this method to get notifications when media is paused.
   void onPause() {/* user implementation */}
 
@@ -34,15 +40,19 @@ mixin PlayerObserver {
   /// finished. This will occur when user finishes scrubbing media.
   /// [position] is position in seconds before seek started.
   /// [offset] is seconds after seek processed.
-  void onSeek(int position, double offset) {/* user implementation */}
+  /// void onSeek(int position, double offset) {/* user implementation */}
 
   /// Override this method to get notifications when media duration is
   /// set or changed.
   /// [duration] is in milliseconds. Returns -1 for live stream
+  ///
+  /// TODO: Maybe not needed
   void onDuration(int duration) {/* user implementation */}
 
   /// Override this method to get errors thrown by the player
   void onError(String error) {/* user implementation */}
+
+  void onMediaSet() {/* user implementation */}
 
   void _processEvent(dynamic event) async {
     String eventName = event["name"];
@@ -70,6 +80,7 @@ mixin PlayerObserver {
         break;
 
       /* onSeek */
+      /*
       case "onSeek":
 
         /* position of the player before the player seeks (in seconds) */
@@ -81,6 +92,7 @@ mixin PlayerObserver {
         onSeek(position, offset);
 
         break;
+      */
 
       case "onDuration":
         onDuration((event["duration"]).toInt());
@@ -88,6 +100,14 @@ mixin PlayerObserver {
 
       case "onError":
         onError(event["error"]);
+        break;
+
+      case "onMediaSet":
+        //onMediaSet();
+        break;
+
+      case "onPrepared":
+        onMediaSet();
         break;
 
       default:
