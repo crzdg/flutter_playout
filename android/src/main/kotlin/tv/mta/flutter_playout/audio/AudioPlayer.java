@@ -278,7 +278,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         audioServiceBinder.setSubtitle(this.subtitle);
 
-        audioServiceBinder.setMedia();
+        //audioServiceBinder.setMedia();
 
         notifyDartOnMediaSet();
 
