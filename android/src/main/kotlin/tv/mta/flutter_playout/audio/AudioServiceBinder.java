@@ -194,11 +194,6 @@ public class AudioServiceBinder
         }
     }
 
-    void setMedia(){
-        initAudioPlayer();
-        //pauseAudio();
-    }
-
     void reset() {
 
         if (audioPlayer != null) {
