@@ -23,6 +23,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterNativeView;
 import tv.mta.flutter_playout.MediaNotificationManagerService;
+import tv.mta.fluter_playout.PlayerState;
 
 public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
 
@@ -43,6 +44,8 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private String title;
 
     private String subtitle;
+
+    private PlayerState playerState;
 
     private int startPositionInMills;
 
@@ -182,7 +185,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onInitRadioPlayer");
             eventSink.success(message);
         } catch (Exception e) {
-            eventSink.error(e);
+            eventSink.error((String) e);
         }
     }
 
@@ -198,7 +201,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             audioServiceBinder.setAudioFileUrl(this.audioURL);
             audioServiceBinder.setTitle(this.title);
             audioServiceBinder.setSubtitle(this.subtitle);
-            audioServiceBinder.updateRadioInformations();
+            //audioServiceBinder.updateRadioInformations();
             JSONObject message = new JSONObject();
             message.put("name", "onSetupRadio");
             eventSink.success(message);
@@ -214,7 +217,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             this.subtitle = (String) args.get("subtitle");
             audioServiceBinder.setTitle(this.title);
             audioServiceBinder.setSubtitle(this.subtitle);
-            audioServiceBinder.updateRadioInformations();
+            //audioServiceBinder.updateRadioInformations();
             JSONObject message = new JSONObject();
             message.put("name", "onChangemMediaInfo");
             eventSink.success(message);
@@ -228,7 +231,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
             this.audioURL = (String) args.get("url");
             audioServiceBinder.setAudioFileUrl(this.audioURL);
-            audioServiceBinder.updateRadioURL();
+            //audioServiceBinder.updateRadioURL();
             this.playerState = PlayerState.READY;
             JSONObject message = new JSONObject();
             message.put("name", "onChangeRadioURL");
