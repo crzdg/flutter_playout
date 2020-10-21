@@ -179,66 +179,50 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void initRadioPlayer(Object arguments){
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-        try {
-            bindAudioService();
-            JSONObject message = new JSONObject();
-            message.put("name", "onInitRadioPlayer");
-            eventSink.success(message);
-        } catch (Exception e) {
-            //
-        }
+        bindAudioService();
+        JSONObject message = new JSONObject();
+        message.put("name", "onInitRadioPlayer");
+        eventSink.success(message);
     }
 
     private void setupRadio(Object arguments){
+        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+        this.audioURL = (String) args.get("url");
+        this.title = (String) args.get("title");
+        this.subtitle = (String) args.get("subtitle");
         try {
-            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-            this.audioURL = (String) args.get("url");
-            this.title = (String) args.get("title");
-            this.subtitle = (String) args.get("subtitle");
-            try {
-                this.startPositionInMills = (int) args.get("position");
-            } catch (Exception e) { /* ignore */ }
-            audioServiceBinder.setAudioFileUrl(this.audioURL);
-            audioServiceBinder.setTitle(this.title);
-            audioServiceBinder.setSubtitle(this.subtitle);
-            //audioServiceBinder.updateRadioInformations();
-            JSONObject message = new JSONObject();
-            message.put("name", "onSetupRadio");
-            eventSink.success(message);
-        } catch (Exception e){
-            //
-        }
+            this.startPositionInMills = (int) args.get("position");
+        } catch (Exception e) { /* ignore */ }
+        audioServiceBinder.setAudioFileUrl(this.audioURL);
+        audioServiceBinder.setTitle(this.title);
+        audioServiceBinder.setSubtitle(this.subtitle);
+        //audioServiceBinder.updateRadioInformations();
+        JSONObject message = new JSONObject();
+        message.put("name", "onSetupRadio");
+        eventSink.success(message);
     }
 
     private void changeMediaInfo(Object arguments){
-        try {
-            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-            this.title = (String) args.get("title");
-            this.subtitle = (String) args.get("subtitle");
-            audioServiceBinder.setTitle(this.title);
-            audioServiceBinder.setSubtitle(this.subtitle);
-            //audioServiceBinder.updateRadioInformations();
-            JSONObject message = new JSONObject();
-            message.put("name", "onChangemMediaInfo");
-            eventSink.success(message);
-        } catch (Exception e){
-            //
-        }
+        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+        this.title = (String) args.get("title");
+        this.subtitle = (String) args.get("subtitle");
+        audioServiceBinder.setTitle(this.title);
+        audioServiceBinder.setSubtitle(this.subtitle);
+        //audioServiceBinder.updateRadioInformations();
+        JSONObject message = new JSONObject();
+        message.put("name", "onChangemMediaInfo");
+        eventSink.success(message);
     }
 
     private void changeRadioURL(Object arguments){
-        try {
-            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-            this.audioURL = (String) args.get("url");
-            audioServiceBinder.setAudioFileUrl(this.audioURL);
-            //audioServiceBinder.updateRadioURL();
-            this.playerState = PlayerState.READY;
-            JSONObject message = new JSONObject();
-            message.put("name", "onChangeRadioURL");
-            eventSink.success(message);
-        } catch (Exception e){
-            //
-        }
+        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+        this.audioURL = (String) args.get("url");
+        audioServiceBinder.setAudioFileUrl(this.audioURL);
+        //audioServiceBinder.updateRadioURL();
+        this.playerState = PlayerState.READY;
+        JSONObject message = new JSONObject();
+        message.put("name", "onChangeRadioURL");
+        eventSink.success(message);
     }
 
 
