@@ -8,7 +8,6 @@ class FlutterPlayoutPlugin {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      PlayerViewFactory.registerWith(registrar)
       AudioPlayer.registerWith(registrar)
     }
   }
