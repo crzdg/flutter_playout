@@ -185,7 +185,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onInitRadioPlayer");
             eventSink.success(message);
         } catch (Exception e) {
-            eventSink.error("e");
+            //
         }
     }
 
@@ -206,7 +206,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onSetupRadio");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error("e");
+            //
         }
     }
 
@@ -222,7 +222,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onChangemMediaInfo");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error("e");
+            //
         }
     }
 
@@ -237,7 +237,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onChangeRadioURL");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error("e");
+            //
         }
     }
 
