@@ -23,7 +23,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterNativeView;
 import tv.mta.flutter_playout.MediaNotificationManagerService;
-import tv.mta.fluter_playout.PlayerState;
+import tv.mta.flutter_playout.PlayerState;
 
 public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
 
@@ -185,7 +185,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onInitRadioPlayer");
             eventSink.success(message);
         } catch (Exception e) {
-            eventSink.error((String) e);
+            eventSink.error(("e");
         }
     }
 
@@ -206,7 +206,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onSetupRadio");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error(e);
+            eventSink.error("e");
         }
     }
 
@@ -222,7 +222,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onChangemMediaInfo");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error(e);
+            eventSink.error("e");
         }
     }
 
@@ -237,7 +237,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onChangeRadioURL");
             eventSink.success(message);
         } catch (Exception e){
-            eventSink.error(e);
+            eventSink.error("e");
         }
     }
 
