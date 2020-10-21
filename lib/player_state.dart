@@ -16,5 +16,13 @@ enum PlayerState {
   /// Paused. The user can [resume] the playback without providing the URL.
   PAUSED,
 
+  /// Created. state after object initialization (flutter and native side).
+  CREATED,
+
+  /// An error occured in the player.
+  ERROR,
+
+  /// Player is destroyed properly. A new player instance could be initialized
+  COMPLETE
 
 }
