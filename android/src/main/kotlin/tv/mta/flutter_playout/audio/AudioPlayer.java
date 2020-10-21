@@ -185,7 +185,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             message.put("name", "onInitRadioPlayer");
             eventSink.success(message);
         } catch (Exception e) {
-            eventSink.error(("e");
+            eventSink.error("e");
         }
     }
 
