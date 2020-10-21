@@ -251,7 +251,7 @@ public class AudioServiceBinder
                 //audioPlayer.start();
             //}
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             mReceivedError = true;
         }
     }
