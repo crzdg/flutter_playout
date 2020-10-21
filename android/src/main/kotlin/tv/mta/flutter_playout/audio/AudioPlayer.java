@@ -47,14 +47,17 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private int startPositionInMills;
 
     private int mediaDuration = 0;
+
     /**
      * Whether we have bound to a {@link MediaNotificationManagerService}.
      */
     private boolean mIsBoundMediaNotificationManagerService;
+
     /**
      * The {@link MediaNotificationManagerService} we are bound to.
      */
     private MediaNotificationManagerService mMediaNotificationManagerService;
+
     /**
      * The {@link ServiceConnection} serves as glue between this activity and the
      * {@link MediaNotificationManagerService}.
@@ -170,6 +173,71 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             mIsBoundMediaNotificationManagerService = false;
         }
     }
+
+    private void initRadioPlayer(Object arguments){
+        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+        try {
+            bindAudioService();
+            JSONObject message = new JSONObject();
+            message.put("name", "onInitRadioPlayer");
+            eventSink.success(message);
+        } catch (Exception e) {
+            eventSink.error(e);
+        }
+    }
+
+    private void setupRadio(Object arguments){
+        try {
+            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+            this.audioURL = (String) args.get("url");
+            this.title = (String) args.get("title");
+            this.subtitle = (String) args.get("subtitle");
+            try {
+                this.startPositionInMills = (int) args.get("position");
+            } catch (Exception e) { /* ignore */ }
+            audioServiceBinder.setAudioFileUrl(this.audioURL);
+            audioServiceBinder.setTitle(this.title);
+            audioServiceBinder.setSubtitle(this.subtitle);
+            audioServiceBinder.updateRadioInformations();
+            JSONObject message = new JSONObject();
+            message.put("name", "onSetupRadio");
+            eventSink.success(message);
+        } catch (Exception e){
+            eventSink.error(e);
+        }
+    }
+
+    private void changeMediaInfo(Object arguments){
+        try {
+            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+            this.title = (String) args.get("title");
+            this.subtitle = (String) args.get("subtitle");
+            audioServiceBinder.setTitle(this.title);
+            audioServiceBinder.setSubtitle(this.subtitle);
+            audioServiceBinder.updateRadioInformations();
+            JSONObject message = new JSONObject();
+            message.put("name", "onChangemMediaInfo");
+            eventSink.success(message);
+        } catch (Exception e){
+            eventSink.error(e);
+        }
+    }
+
+    private void changeRadioURL(Object arguments){
+        try {
+            java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
+            this.audioURL = (String) args.get("url");
+            audioServiceBinder.setAudioFileUrl(this.audioURL);
+            audioServiceBinder.updateRadioURL();
+            this.playerState = PlayerState.READY;
+            JSONObject message = new JSONObject();
+            message.put("name", "onChangeRadioURL");
+            eventSink.success(message);
+        } catch (Exception e){
+            eventSink.error(e);
+        }
+    }
+
 
     private void setMedia(Object arguments) {
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
@@ -424,8 +492,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 result.success(true);
                 break;
             }
-            case "seekTo": {
-                seekTo(call.arguments);
+            case "initRadioPlayer": {
+                //seekTo(call.arguments);
+                initRadioPlayer(call.arguments);
                 result.success(true);
                 break;
             }
@@ -434,10 +503,19 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 result.success(true);
                 break;
             }
-            case "setMedia": {
-                setMedia(call.arguments);
+            case "setupRadio": {
+                //setMedia(call.arguments);
+                setupRadio(call.arguments);
                 result.success(true);
                 break;
+            }
+            case "changeMediaInfo": {
+                changeMediaInfo(call.arguments);
+                result.success(true);
+            }
+            case "changeRadioURL": {
+                changeRadioURL(call.arguments);
+                result.success(true);
             }
             default:
                 result.notImplemented();

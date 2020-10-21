@@ -56,6 +56,7 @@ public class AudioServiceBinder
     final int UPDATE_AUDIO_DURATION = 5;
     final int UPDATE_PLAYER_STATE_TO_ERROR = 6;
     final int UPDATE_PLAYER_STATE_TO_PREPARED = 7;
+    private PlayerState playerState = PlayerState.CREATED;
     private boolean isPlayerReady = false;
     private boolean isBound = true;
 
@@ -232,12 +233,12 @@ public class AudioServiceBinder
             if (audioPlayer == null) {
 
                 audioPlayer = new MediaPlayer();
-
+                /*
                 if (!TextUtils.isEmpty(getAudioFileUrl())) {
 
                     audioPlayer.setDataSource(getAudioFileUrl());
                 }
-
+                */
                 audioPlayer.setOnPreparedListener(this);
 
                 audioPlayer.setOnCompletionListener(this);
@@ -245,12 +246,15 @@ public class AudioServiceBinder
                 audioPlayer.setOnErrorListener(this);
 
                 audioPlayer.prepareAsync();
+
+                this.playerState = PlayerState.INITIALIZED;
+
             }
 
-            else {
-
-                audioPlayer.start();
-            }
+            //else {
+                this.playerState = PlayerState.ERROR;
+                //audioPlayer.start();
+            //}
 
         } catch (IOException ex) {
             mReceivedError = true;

@@ -28,11 +28,5 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".video.RemoteReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
     </application>
 </manifest>

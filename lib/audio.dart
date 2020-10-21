@@ -67,7 +67,7 @@ class Audio with ChannelObserver {
     this._title = title;
     this._subtitle = subtitle;
     this._position = position;
-    return _audioChannel.invokeMethod("setUpRadio", <String, dynamic>{
+    return _audioChannel.invokeMethod("setupRadio", <String, dynamic>{
       "url": url,
       "title": title,
       "subtitle": subtitle,
