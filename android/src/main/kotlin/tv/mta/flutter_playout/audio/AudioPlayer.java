@@ -68,7 +68,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private ServiceConnection mMediaNotificationManagerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-
+            Log.d(LOG_TAG, "onServiceConnected");
             mMediaNotificationManagerService =
                     ((MediaNotificationManagerService.MediaNotificationManagerServiceBinder) service)
                     .getService();
@@ -78,7 +78,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
+            Log.d(LOG_TAG, "onServiceDisconnected");
             mMediaNotificationManagerService = null;
         }
     };
@@ -180,13 +180,12 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(Object arguments){
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         bindAudioService();
-        audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
             eventSink.success(message);
         } catch (Exception e) {
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+            Log.e(TAG, "initRadioPlayerError: ", e);
         }
     }
 
