@@ -261,7 +261,7 @@ public class AudioServiceBinder
 
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-            
+
             audioPlayer.prepareAsync();
         }
     }
@@ -504,6 +504,8 @@ public class AudioServiceBinder
             case PREPARED:
                 playbackStateCompat = PlaybackStateCompat.STATE_NONE;
                 break;
+            case STOPPED:
+                playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
             case IDLE:
                 if (mReceivedError) {
                     playbackStateCompat = PlaybackStateCompat.STATE_ERROR;
