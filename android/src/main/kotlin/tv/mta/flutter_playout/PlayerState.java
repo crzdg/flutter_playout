@@ -9,6 +9,7 @@ public enum PlayerState {
     IDLE,
     BUFFERING,
     ERROR,
+    PREPARED,
     COMPLETE;
 
     private PlayerState() {

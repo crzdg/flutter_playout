@@ -209,6 +209,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setAudioFileUrl(this.audioURL);
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
+        audioServiceBinder.makeRadioPlayerReady();
         //audioServiceBinder.updateRadioInformations();
         try {
             JSONObject message = new JSONObject();

@@ -228,6 +228,17 @@ public class AudioServiceBinder
         }
     }
 
+    void makeRadioPlayerReady() {
+
+        if (!TextUtils.isEmpty(getAudioFileUrl())) {
+            audioPlayer.setDataSource(getAudioFileUrl());
+        }
+
+        audioPlayer.prepare();
+
+        this.playerState = PlayerState.INITIALIZED;
+    }
+
     void initAudioPlayer() {
 
         try {
@@ -235,21 +246,16 @@ public class AudioServiceBinder
             if (audioPlayer == null) {
 
                 audioPlayer = new MediaPlayer();
-                /*
-                if (!TextUtils.isEmpty(getAudioFileUrl())) {
 
-                    audioPlayer.setDataSource(getAudioFileUrl());
-                }
-                */
                 audioPlayer.setOnPreparedListener(this);
 
                 audioPlayer.setOnCompletionListener(this);
 
                 audioPlayer.setOnErrorListener(this);
 
-                audioPlayer.prepare();
+                //audioPlayer.prepare();
 
-                //this.playerState = PlayerState.INITIALIZED;
+                this.playerState = PlayerState.IDLE;
 
             }
 
