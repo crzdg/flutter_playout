@@ -102,7 +102,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             //audioServiceBinder.setTitle(title);
 
             //audioServiceBinder.setSubtitle(subtitle);
-            
+
             //audioServiceBinder.pauseAudio();
 
             //audioServiceBinder.startAudio(startPositionInMills);

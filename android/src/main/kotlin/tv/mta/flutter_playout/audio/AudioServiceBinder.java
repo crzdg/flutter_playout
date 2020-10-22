@@ -383,7 +383,9 @@ public class AudioServiceBinder
     @Override
     public void onPrepared(MediaPlayer mp) {
 
-        this.playerState = PlayerState.READY;
+        audioPlayer = mp;
+
+        this.playerState = PlayerState.PREPARED;
 
         isPlayerReady = true;
 
