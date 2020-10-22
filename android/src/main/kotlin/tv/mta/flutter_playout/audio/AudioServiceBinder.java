@@ -310,6 +310,8 @@ public class AudioServiceBinder
     @Override
     public void onPrepared(MediaPlayer mp) {
 
+        this.playerState = PlayerState.READY;
+
         isPlayerReady = true;
 
         isBound = true;
@@ -320,7 +322,7 @@ public class AudioServiceBinder
             mp.seekTo(startPositionInMills);
         }
 
-        mp.start();
+        //mp.start();
 
         ComponentName receiver = new ComponentName(context.getPackageName(),
                 RemoteReceiver.class.getName());
@@ -338,7 +340,7 @@ public class AudioServiceBinder
 
         setAudioMetadata();
 
-        updatePlaybackState(PlayerState.PLAYING);
+        //updatePlaybackState(PlayerState.PLAYING);
 
         /* This thread object will send update audio progress message to caller activity every 1 second */
         Thread updateAudioProgressThread = new Thread() {
