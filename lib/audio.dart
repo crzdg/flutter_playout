@@ -10,6 +10,7 @@ class Audio with ChannelObserver {
 
   Audio._(){
    this._state = PlayerState.CREATED;
+   listenForAudioPlayerEvents();
   }
 
   List<PlayerStateObserver> _playerStateObservers = new List();
