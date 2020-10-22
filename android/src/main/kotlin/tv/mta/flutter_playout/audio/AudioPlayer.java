@@ -107,6 +107,8 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.initAudioPlayer();
 
+            Log.d("initRadioPlayer", "calledBinderInit");
+
             //audioServiceBinder.startAudio(startPositionInMills);
 
             doBindMediaNotificationManagerService();
@@ -186,6 +188,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
+            Log.d("initRadioPlayer", "sink init");
             this.eventSink.success(message);
         } catch (Exception e) {
             Log.e(TAG, "initRadioPlayerError: ", e);
