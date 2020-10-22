@@ -103,7 +103,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
 
-            audioServiceBinder.pauseAudio();
+            //audioServiceBinder.pauseAudio();
+
+            audioServiceBinder.initAudioPlayer();
 
             //audioServiceBinder.startAudio(startPositionInMills);
 
@@ -181,7 +183,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         Log.d("initRadioPlayer", "initRadioPlayer");
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         bindAudioService();
-        this.audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
