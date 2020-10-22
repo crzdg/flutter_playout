@@ -148,9 +148,15 @@ public class AudioServiceBinder
         this.startPositionInMills = startPositionInMills;
 
         //initAudioPlayer();
-        Log.d("startAudio", audioPlayer);
-        Log.d("startAudio", mMediaSessionCompat);
-        Log.d("startAudio", mMediaSessionCompat.isActive());
+        if (audioPlayer != null) {
+            Log.d("startAudio", "audioplayer not null");
+        }
+        if (mMediaSessionCompat != null) {
+            Log.d("startAudio", "compat not null");
+            if (mMediaSessionCompat.isActive()) {
+                Log.d("startAudio", "isactive");
+            }
+        }
         if (audioPlayer != null && mMediaSessionCompat != null && mMediaSessionCompat.isActive()) {
             Log.d("startAudio", "set update playback state");
             updatePlaybackState(PlayerState.PLAYING);
