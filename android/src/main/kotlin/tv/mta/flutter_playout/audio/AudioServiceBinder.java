@@ -518,7 +518,6 @@ public class AudioServiceBinder
         }
 
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
-        Log.d("startAudio", "updated playback state");
         updateNotification(capabilities);
     }
 
