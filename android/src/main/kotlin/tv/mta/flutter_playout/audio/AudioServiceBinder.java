@@ -256,7 +256,7 @@ public class AudioServiceBinder
 
             audioPlayer.reset();
 
-            audioPlayer.makeRadioPlayerReady();
+            makeRadioPlayerReady();
 
             // Create update audio player state message.
             Message updateAudioProgressMsg = new Message();
