@@ -229,14 +229,15 @@ public class AudioServiceBinder
     }
 
     void makeRadioPlayerReady() {
-
-        if (!TextUtils.isEmpty(getAudioFileUrl())) {
-            audioPlayer.setDataSource(getAudioFileUrl());
+        try {
+            if (!TextUtils.isEmpty(getAudioFileUrl())) {
+                audioPlayer.setDataSource(getAudioFileUrl());
+            }
+            audioPlayer.prepare();
+            this.playerState = PlayerState.INITIALIZED;
+        } catch (IOException e){
+            this.playerState = PlayerState.ERROR;
         }
-
-        audioPlayer.prepare();
-
-        this.playerState = PlayerState.INITIALIZED;
     }
 
     void initAudioPlayer() {
