@@ -10,6 +10,7 @@ public enum PlayerState {
     BUFFERING,
     ERROR,
     PREPARED,
+    STOPPED,
     COMPLETE;
 
     private PlayerState() {
