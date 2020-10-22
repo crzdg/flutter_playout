@@ -151,33 +151,8 @@ public class AudioServiceBinder
 
             Log.d("startAudio", "set update playback state");
 
-            audioPlayer.start();
+            audioPlayer.prepareAsync();
 
-            ComponentName receiver = new ComponentName(context.getPackageName(),
-                    RemoteReceiver.class.getName());
-
-            /* Create a new MediaSession */
-            mMediaSessionCompat = new MediaSessionCompat(context,
-                    AudioServiceBinder.class.getSimpleName(), receiver, null);
-
-            mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-                    | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
-
-            mMediaSessionCompat.setCallback(new MediaSessionCallback(audioPlayer));
-
-            mMediaSessionCompat.setActive(true);
-
-            setAudioMetadata();
-            
-            updatePlaybackState(PlayerState.PLAYING);
-
-            // Create update audio player state message.
-            Message updateAudioProgressMsg = new Message();
-
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAY;
-
-            // Send the message to caller activity's update audio Handler object.
-            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
         }
         service = this;
     }
@@ -248,8 +223,6 @@ public class AudioServiceBinder
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
             }
-
-            audioPlayer.prepareAsync();
 
         } catch (IOException e){
             this.playerState = PlayerState.ERROR;
@@ -345,6 +318,35 @@ public class AudioServiceBinder
 
         // Send the message to caller activity's update audio progressbar Handler object.
         audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
+        audioPlayer.start();
+
+        ComponentName receiver = new ComponentName(context.getPackageName(),
+                RemoteReceiver.class.getName());
+
+        /* Create a new MediaSession */
+        mMediaSessionCompat = new MediaSessionCompat(context,
+                AudioServiceBinder.class.getSimpleName(), receiver, null);
+
+        mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+                | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+
+        mMediaSessionCompat.setCallback(new MediaSessionCallback(audioPlayer));
+
+        mMediaSessionCompat.setActive(true);
+
+        setAudioMetadata();
+
+        updatePlaybackState(PlayerState.PLAYING);
+
+        // Create update audio player state message.
+        updateAudioProgressMsg = new Message();
+
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAY;
+
+        // Send the message to caller activity's update audio Handler object.
+        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
 
     }
 
