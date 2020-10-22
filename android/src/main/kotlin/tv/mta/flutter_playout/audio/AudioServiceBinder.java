@@ -147,7 +147,7 @@ public class AudioServiceBinder
 
         this.startPositionInMills = startPositionInMills;
 
-        //initAudioPlayer(); TODO:
+        initAudioPlayer();
 
         if (audioPlayer != null && mMediaSessionCompat != null && mMediaSessionCompat.isActive()) {
 
@@ -246,10 +246,10 @@ public class AudioServiceBinder
 
             }
 
-            //else {
+            else {
                 this.playerState = PlayerState.ERROR;
                 //audioPlayer.start();
-            //}
+            }
 
         } catch (Exception ex) {
             mReceivedError = true;

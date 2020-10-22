@@ -180,6 +180,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(Object arguments){
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         bindAudioService();
+        audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
@@ -230,6 +231,16 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         this.audioURL = (String) args.get("url");
         audioServiceBinder.setAudioFileUrl(this.audioURL);
+        if (audioServiceBinder != null) {
+
+            try {
+
+                audioServiceBinder.reset();
+
+            } catch (Exception e) { /* ignore */}
+
+            audioServiceBinder.setMediaChanging(true);
+        }
         //audioServiceBinder.updateRadioURL();
         this.playerState = PlayerState.READY;
         try {
