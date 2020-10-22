@@ -298,11 +298,7 @@ public class AudioServiceBinder
                 audioPlayer.setDataSource(getAudioFileUrl());
             }
 
-            audioPlayer.prepare();
-
-            this.playerState = PlayerState.PREPARED;
-
-            updatePlaybackState(PlayerState.PREPARED);
+            audioPlayer.prepareAsync();
 
         } catch (IOException e){
             this.playerState = PlayerState.ERROR;
@@ -380,7 +376,7 @@ public class AudioServiceBinder
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        
         this.playerState = PlayerState.PREPARED;
 
         updatePlaybackState(PlayerState.PREPARED);
