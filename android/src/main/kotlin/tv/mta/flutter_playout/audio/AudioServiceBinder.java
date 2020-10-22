@@ -254,7 +254,9 @@ public class AudioServiceBinder
 
             updatePlaybackState(PlayerState.STOPPED);
 
-            audioPlayer.prepareAsync();
+            audioPlayer.reset();
+
+            audioPlayer.makeRadioPlayerReady();
 
             // Create update audio player state message.
             Message updateAudioProgressMsg = new Message();
@@ -297,7 +299,6 @@ public class AudioServiceBinder
     void makeRadioPlayerReady() {
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
-
                 audioPlayer.setDataSource(getAudioFileUrl());
             }
 
@@ -404,7 +405,7 @@ public class AudioServiceBinder
     public void onCompletion(MediaPlayer mp) {
 
         if (audioPlayer != null) {
-
+            Log.d("on completion", "on completion");
             audioPlayer.pause();
 
             updatePlaybackState(PlayerState.PAUSED);
