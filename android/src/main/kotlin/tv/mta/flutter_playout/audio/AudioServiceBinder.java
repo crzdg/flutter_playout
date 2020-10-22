@@ -150,7 +150,7 @@ public class AudioServiceBinder
         //initAudioPlayer();
 
         if (audioPlayer != null && mMediaSessionCompat != null && mMediaSessionCompat.isActive()) {
-
+            Log.d("startAudio", "set update playback state");
             updatePlaybackState(PlayerState.PLAYING);
 
             // Create update audio player state message.
@@ -506,7 +506,7 @@ public class AudioServiceBinder
         }
 
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
-
+        Log.d("startAudio", "updated playback state");
         updateNotification(capabilities);
     }
 
