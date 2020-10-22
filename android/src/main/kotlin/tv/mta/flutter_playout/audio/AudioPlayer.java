@@ -205,6 +205,13 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
         audioServiceBinder.makeRadioPlayerReady();
+        try {
+            JSONObject message = new JSONObject();
+            message.put("name", "onReady");
+            eventSink.success(message);
+        } catch (Exception e) {
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
         //audioServiceBinder.updateRadioInformations();
     }
 
