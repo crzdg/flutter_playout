@@ -249,10 +249,10 @@ public class AudioServiceBinder
 
             if (audioPlayer.isPlaying()) {
 
-                audioPlayer.pause();
+                audioPlayer.stop();
             }
 
-            updatePlaybackState(PlayerState.PAUSED);
+            updatePlaybackState(PlayerState.STOPPED);
 
             // Create update audio player state message.
             Message updateAudioProgressMsg = new Message();
@@ -261,6 +261,12 @@ public class AudioServiceBinder
 
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
+            try {
+                audioPlayer.prepareAsync();
+            } catch (IOException e){
+                this.playerState = PlayerState.ERROR;
+            }
         }
     }
 
@@ -376,7 +382,7 @@ public class AudioServiceBinder
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        
+
         this.playerState = PlayerState.PREPARED;
 
         updatePlaybackState(PlayerState.PREPARED);
