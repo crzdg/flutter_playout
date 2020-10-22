@@ -178,8 +178,10 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     }
 
     private void initRadioPlayer(Object arguments){
+        Log.d("initRadioPlayer", "initRadioPlayer");
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         bindAudioService();
+        audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
@@ -464,6 +466,8 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
      * background service's AudioServiceBinder instance to invoke related methods.
      */
     private void bindAudioService() {
+
+        Log.d("bindAudioService", "bindAudioService");
 
         if (audioServiceBinder == null) {
 
