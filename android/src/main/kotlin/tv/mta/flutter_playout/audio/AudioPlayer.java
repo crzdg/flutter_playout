@@ -206,13 +206,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setSubtitle(this.subtitle);
         audioServiceBinder.makeRadioPlayerReady();
         //audioServiceBinder.updateRadioInformations();
-        try {
-            JSONObject message = new JSONObject();
-            message.put("name", "onSetupRadio");
-            eventSink.success(message);
-        } catch (Exception e) {
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
-        }
     }
 
     private void changeMediaInfo(Object arguments){
@@ -606,9 +599,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                         JSONObject message = new JSONObject();
 
-                        message.put("name", "onPrepared");
+                        message.put("name", "onSetupRadio");
 
-                        service.eventSink.success(message);
+                        eventSink.success(message);
 
                     } catch (Exception e) {
 
