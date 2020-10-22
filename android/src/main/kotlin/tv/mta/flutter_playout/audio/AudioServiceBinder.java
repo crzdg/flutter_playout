@@ -147,8 +147,6 @@ public class AudioServiceBinder
         Log.d("startAudio", "startAudio");
         this.startPositionInMills = startPositionInMills;
 
-        //initAudioPlayer();
-
         if (audioPlayer != null) {
 
             Log.d("startAudio", "set update playback state");
@@ -174,8 +172,6 @@ public class AudioServiceBinder
             mMediaSessionCompat.setActive(true);
 
             setAudioMetadata();
-
-            updatePlaybackState(PlayerState.PLAYING);
 
             /* This thread object will send update audio progress message to caller activity every 1 second */
             Thread updateAudioProgressThread = new Thread() {
@@ -230,7 +226,6 @@ public class AudioServiceBinder
 
             updateAudioProgressThread.start();
 
-
             updatePlaybackState(PlayerState.PLAYING);
 
             // Create update audio player state message.
@@ -241,7 +236,6 @@ public class AudioServiceBinder
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
         }
-
         service = this;
     }
 
@@ -382,8 +376,6 @@ public class AudioServiceBinder
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
-        audioPlayer = mp;
 
         this.playerState = PlayerState.PREPARED;
 
