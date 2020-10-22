@@ -601,7 +601,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                         message.put("name", "onSetupRadio");
 
-                        eventSink.success(message);
+                        service.eventSink.success(message);
 
                     } catch (Exception e) {
 
