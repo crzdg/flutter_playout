@@ -154,10 +154,10 @@ public class AudioServiceBinder
             Log.d("startAudio", "set update playback state");
 
             if (startPositionInMills >= 0) {
-                mp.seekTo(startPositionInMills);
+                audioPlayer.seekTo(startPositionInMills);
             }
 
-            mp.start();
+            audioPlayer.start();
 
             ComponentName receiver = new ComponentName(context.getPackageName(),
                     RemoteReceiver.class.getName());
