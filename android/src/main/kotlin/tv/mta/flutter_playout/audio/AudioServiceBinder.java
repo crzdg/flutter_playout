@@ -261,12 +261,8 @@ public class AudioServiceBinder
 
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
-            try {
-                audioPlayer.prepareAsync();
-            } catch (IOException e){
-                this.playerState = PlayerState.ERROR;
-            }
+            
+            audioPlayer.prepareAsync();
         }
     }
 
