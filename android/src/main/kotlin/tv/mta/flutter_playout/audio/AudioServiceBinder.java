@@ -144,10 +144,10 @@ public class AudioServiceBinder
     }
 
     void startAudio(int startPositionInMills) {
-
+        Log.d("startAudio", "startAudio");
         this.startPositionInMills = startPositionInMills;
 
-        initAudioPlayer();
+        //initAudioPlayer();
 
         if (audioPlayer != null && mMediaSessionCompat != null && mMediaSessionCompat.isActive()) {
 
