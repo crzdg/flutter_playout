@@ -186,7 +186,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     }
 
     private void initRadioPlayer(){
-        Log.d("initRadioPlayer", "initRadioPlayer");s;
+        Log.d("initRadioPlayer", "initRadioPlayer");
         audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
