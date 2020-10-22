@@ -147,7 +147,7 @@ public class AudioServiceBinder
         Log.d("startAudio", "startAudio");
         this.startPositionInMills = startPositionInMills;
 
-        if (audioPlayer != null) {
+        if (audioPlayer != null && audioPlayer.isPlaying() == false) {
 
             Log.d("startAudio", "set update playback state");
 
@@ -379,6 +379,8 @@ public class AudioServiceBinder
 
         this.playerState = PlayerState.PREPARED;
 
+        updatePlaybackState(PlayerState.PREPARED);
+
         isPlayerReady = true;
 
         isBound = true;
@@ -496,6 +498,9 @@ public class AudioServiceBinder
                 break;
             case BUFFERING:
                 playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
+                break;
+            case PREPARED:
+                playbackStateCompat = PlaybackStateCompat.STATE_NONE;
                 break;
             case IDLE:
                 if (mReceivedError) {
