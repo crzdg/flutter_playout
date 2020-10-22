@@ -625,7 +625,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                         JSONObject message = new JSONObject();
 
-                        message.put("name", "onReady");
+                        message.put("name", "onSetupRadio");
 
                         service.eventSink.success(message);
 

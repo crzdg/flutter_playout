@@ -253,8 +253,6 @@ public class AudioServiceBinder
 
                 audioPlayer.setOnErrorListener(this);
 
-                //audioPlayer.prepare();
-
                 this.playerState = PlayerState.IDLE;
 
                 updatePlaybackState(PlayerState.IDLE);
