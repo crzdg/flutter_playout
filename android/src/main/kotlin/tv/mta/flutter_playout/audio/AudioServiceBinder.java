@@ -403,21 +403,7 @@ public class AudioServiceBinder
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
-        if (audioPlayer != null) {
-            Log.d("on completion", "on completion");
-            audioPlayer.pause();
-
-            updatePlaybackState(PlayerState.PAUSED);
-
-            // Create update audio player state message.
-            Message updateAudioProgressMsg = new Message();
-
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_COMPLETE;
-
-            // Send the message to caller activity's update audio Handler object.
-            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-        }
+        Log.d("on completion", "on completion");
     }
 
     @Override
