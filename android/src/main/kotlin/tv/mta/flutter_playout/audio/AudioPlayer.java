@@ -95,23 +95,27 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.setContext(context);
 
-            audioServiceBinder.setAudioFileUrl(audioURL);
-
-            audioServiceBinder.setTitle(title);
-
-            audioServiceBinder.setSubtitle(subtitle);
-
             audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-
-            //audioServiceBinder.pauseAudio();
 
             audioServiceBinder.initAudioPlayer();
 
-            Log.d("initRadioPlayer", "calledBinderInit");
+            //audioServiceBinder.setAudioFileUrl(audioURL);
+
+            //audioServiceBinder.setTitle(title);
+
+            //audioServiceBinder.setSubtitle(subtitle);
+
+
+
+            //audioServiceBinder.pauseAudio();
+
 
             //audioServiceBinder.startAudio(startPositionInMills);
 
             doBindMediaNotificationManagerService();
+
+            initRadioPlayer();
+
         }
 
         @Override
@@ -184,7 +188,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(Object arguments){
         Log.d("initRadioPlayer", "initRadioPlayer");
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-        bindAudioService();
+        audioServiceBinder.initAudioPlayer();
         try {
             JSONObject message = new JSONObject();
             message.put("name", "onInitRadioPlayer");
@@ -515,7 +519,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             }
             case "initRadioPlayer": {
                 //seekTo(call.arguments);
-                initRadioPlayer(call.arguments);
+                bindAudioService();
                 result.success(true);
                 break;
             }
