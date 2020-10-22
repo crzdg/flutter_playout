@@ -150,7 +150,7 @@ public class AudioServiceBinder
         if (audioPlayer != null && audioPlayer.isPlaying() == false) {
 
             Log.d("startAudio", "set update playback state");
-            
+
             audioPlayer.start();
 
             ComponentName receiver = new ComponentName(context.getPackageName(),
@@ -294,10 +294,16 @@ public class AudioServiceBinder
     void makeRadioPlayerReady() {
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
+
                 audioPlayer.setDataSource(getAudioFileUrl());
             }
+
             audioPlayer.prepare();
-            this.playerState = PlayerState.INITIALIZED;
+
+            this.playerState = PlayerState.PREPARED;
+
+            updatePlaybackState(PlayerState.PREPARED);
+
         } catch (IOException e){
             this.playerState = PlayerState.ERROR;
         }
@@ -320,6 +326,8 @@ public class AudioServiceBinder
                 //audioPlayer.prepare();
 
                 this.playerState = PlayerState.IDLE;
+
+                updatePlaybackState(PlayerState.IDLE);
 
             }
 
