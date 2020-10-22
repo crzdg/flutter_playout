@@ -221,7 +221,7 @@ public class AudioServiceBinder
         }
     }
 
-    private void initAudioPlayer() {
+    void initAudioPlayer() {
 
         try {
 
