@@ -56,6 +56,7 @@ public class AudioServiceBinder
     final int UPDATE_AUDIO_DURATION = 5;
     final int UPDATE_PLAYER_STATE_TO_ERROR = 6;
     final int UPDATE_PLAYER_STATE_TO_PREPARED = 7;
+    final int UPDATE_PLAYER_STATE_TO_INITIALIZED = 8;
     private PlayerState playerState = PlayerState.CREATED;
     private boolean isPlayerReady = false;
     private boolean isBound = true;
@@ -222,11 +223,20 @@ public class AudioServiceBinder
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
+                this.playerState = PlayerState.INITIALIZED;
             }
 
         } catch (IOException e){
             this.playerState = PlayerState.ERROR;
         }
+
+        Message updateAudioProgressMsg = new Message();
+
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_INITIALIZED;
+
+        // Send the message to caller activity's update audio Handler object.
+        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
     }
 
     void initAudioPlayer() {
@@ -301,23 +311,11 @@ public class AudioServiceBinder
     @Override
     public void onPrepared(MediaPlayer mp) {
 
-        this.playerState = PlayerState.PREPARED;
-
-        updatePlaybackState(PlayerState.PREPARED);
-
         isPlayerReady = true;
 
         isBound = true;
 
         setMediaChanging(false);
-
-        // Create update audio progress message.
-        Message updateAudioProgressMsg = new Message();
-
-        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PREPARED;
-
-        // Send the message to caller activity's update audio progressbar Handler object.
-        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
 
         audioPlayer.start();
 
@@ -340,7 +338,7 @@ public class AudioServiceBinder
         updatePlaybackState(PlayerState.PLAYING);
 
         // Create update audio player state message.
-        updateAudioProgressMsg = new Message();
+        Message updateAudioProgressMsg = new Message();
 
         updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAY;
 

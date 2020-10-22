@@ -599,24 +599,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                     service.notifyDartOnPause();
 
+                }
 
-                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PREPARED) {
-
-                    try {
-
-                        JSONObject message = new JSONObject();
-
-                        message.put("name", "onSetupRadio");
-
-                        service.eventSink.success(message);
-
-                    } catch (Exception e) {
-
-                        Log.e(service.TAG, "notifyDartOnPrepared: ", e);
-                    }
-
-
-                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAY) {
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAY) {
 
                     service.notifyDartOnPlay();
 
@@ -631,6 +616,23 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 } else if (msg.what == service.audioServiceBinder.UPDATE_AUDIO_DURATION) {
 
                     service.onDuration();
+
+                }
+
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_INITIALIZED) {
+
+                    try {
+
+                        JSONObject message = new JSONObject();
+
+                        message.put("name", "onReady");
+
+                        service.eventSink.success(message);
+
+                    } catch (Exception e) {
+
+                        Log.e(service.TAG, "notifyDartOnPrepared: ", e);
+                    }
 
                 }
             }
