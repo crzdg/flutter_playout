@@ -150,11 +150,7 @@ public class AudioServiceBinder
         if (audioPlayer != null && audioPlayer.isPlaying() == false) {
 
             Log.d("startAudio", "set update playback state");
-
-            if (startPositionInMills >= 0) {
-                audioPlayer.seekTo(startPositionInMills);
-            }
-
+            
             audioPlayer.start();
 
             ComponentName receiver = new ComponentName(context.getPackageName(),
