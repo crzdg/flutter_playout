@@ -230,14 +230,6 @@ public class AudioServiceBinder
 
             updateAudioProgressThread.start();
 
-            // Create update audio progress message.
-            Message updateAudioProgressMsg = new Message();
-
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PREPARED;
-
-            // Send the message to caller activity's update audio progressbar Handler object.
-            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
 
             updatePlaybackState(PlayerState.PLAYING);
 
@@ -398,6 +390,14 @@ public class AudioServiceBinder
         isBound = true;
 
         setMediaChanging(false);
+
+        // Create update audio progress message.
+        Message updateAudioProgressMsg = new Message();
+
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PREPARED;
+
+        // Send the message to caller activity's update audio progressbar Handler object.
+        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
 
     }
 
