@@ -180,9 +180,13 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(Object arguments){
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         bindAudioService();
-        JSONObject message = new JSONObject();
-        message.put("name", "onInitRadioPlayer");
-        eventSink.success(message);
+        try {
+            JSONObject message = new JSONObject();
+            message.put("name", "onInitRadioPlayer");
+            eventSink.success(message);
+        } catch (Exception e) {
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
     }
 
     private void setupRadio(Object arguments){
@@ -197,9 +201,13 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
         //audioServiceBinder.updateRadioInformations();
-        JSONObject message = new JSONObject();
-        message.put("name", "onSetupRadio");
-        eventSink.success(message);
+        try {
+            JSONObject message = new JSONObject();
+            message.put("name", "onSetupRadio");
+            eventSink.success(message);
+        } catch (Exception e) {
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
     }
 
     private void changeMediaInfo(Object arguments){
@@ -209,9 +217,13 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
         //audioServiceBinder.updateRadioInformations();
-        JSONObject message = new JSONObject();
-        message.put("name", "onChangemMediaInfo");
-        eventSink.success(message);
+        try {
+            JSONObject message = new JSONObject();
+            message.put("name", "onChangeMediaInfo");
+            eventSink.success(message);
+        } catch (Exception e) {
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
     }
 
     private void changeRadioURL(Object arguments){
@@ -220,9 +232,13 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setAudioFileUrl(this.audioURL);
         //audioServiceBinder.updateRadioURL();
         this.playerState = PlayerState.READY;
-        JSONObject message = new JSONObject();
-        message.put("name", "onChangeRadioURL");
-        eventSink.success(message);
+        try {
+            JSONObject message = new JSONObject();
+            message.put("name", "onChangeRadioURL");
+            eventSink.success(message);
+        } catch (Exception e) {
+            Log.e(TAG, "notifyDartOnMediaSet: ", e);
+        }
     }
 
 
