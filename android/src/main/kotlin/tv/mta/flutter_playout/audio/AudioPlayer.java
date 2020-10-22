@@ -206,9 +206,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         try {
             this.startPositionInMills = (int) args.get("position");
         } catch (Exception e) { /* ignore */ }
-        //audioServiceBinder.setAudioFileUrl(this.audioURL);
-        //audioServiceBinder.setTitle(this.title);
-        //audioServiceBinder.setSubtitle(this.subtitle);
+        audioServiceBinder.setAudioFileUrl(this.audioURL);
+        audioServiceBinder.setTitle(this.title);
+        audioServiceBinder.setSubtitle(this.subtitle);
         //audioServiceBinder.updateRadioInformations();
         try {
             JSONObject message = new JSONObject();
