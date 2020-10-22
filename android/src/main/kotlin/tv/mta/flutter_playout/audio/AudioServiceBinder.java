@@ -168,60 +168,7 @@ public class AudioServiceBinder
             mMediaSessionCompat.setActive(true);
 
             setAudioMetadata();
-
-            /* This thread object will send update audio progress message to caller activity every 1 second */
-            Thread updateAudioProgressThread = new Thread() {
-
-                @Override
-                public void run() {
-
-                    while (isBound) {
-
-                        try {
-
-                            if (audioPlayer != null && audioPlayer.isPlaying()) {
-
-                                // Create update audio progress message.
-                                Message updateAudioProgressMsg = new Message();
-
-                                updateAudioProgressMsg.what = UPDATE_AUDIO_PROGRESS_BAR;
-
-                                // Send the message to caller activity's update audio progressbar Handler object.
-                                audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
-                                try {
-
-                                    Thread.sleep(1000);
-
-                                } catch (InterruptedException ex) { /* ignore */ }
-
-                            } else {
-
-                                try {
-
-                                    Thread.sleep(100);
-
-                                } catch (InterruptedException ex) { /* ignore */ }
-                            }
-
-                            // Create update audio duration message.
-                            Message updateAudioDurationMsg = new Message();
-
-                            updateAudioDurationMsg.what = UPDATE_AUDIO_DURATION;
-
-                            // Send the message to caller activity's update audio progressbar Handler object.
-                            audioProgressUpdateHandler.sendMessage(updateAudioDurationMsg);
-
-                        } catch (Exception e) {
-
-                            Log.e(TAG, "onPrepared:updateAudioProgressThread: ", e);
-                        }
-                    }
-                }
-            };
-
-            updateAudioProgressThread.start();
-
+            
             updatePlaybackState(PlayerState.PLAYING);
 
             // Create update audio player state message.
