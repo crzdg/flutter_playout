@@ -140,40 +140,26 @@ public class AudioServiceBinder
 
     void startAudio() {
         Log.d("startAudio", "startAudio");
-
         if (audioPlayer != null && audioPlayer.isPlaying() == false) {
-
-            Log.d("startAudio", "set update playback state");
-
             updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_START_PLAYING);
-
             audioPlayer.prepareAsync();
-
             updatePlayerState(PlayerState.PREPARING);
-
         }
         service = this;
     }
 
     void pauseAudio() {
-
         Log.d("ANDROID", "pauseAudio");
-
         if (audioPlayer != null) {
-
             if (audioPlayer.isPlaying()) {
                 Log.d("ANDROID", "isplaying");
                 //audioPlayer.pause();
                 audioPlayer.stop();
                 updatePlayerState(PlayerState.STOPPED);
             }
-
             updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_PAUSING);
-
             audioPlayer.reset();
-
             makeAudioPlayerReady();
-
         }
     }
 
@@ -182,7 +168,6 @@ public class AudioServiceBinder
                 getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (notificationManager != null) {
-
             notificationManager.cancel(NOTIFICATION_ID);
         }
     }
@@ -211,30 +196,17 @@ public class AudioServiceBinder
         } catch (IOException e){
             updatePlayerState(PlayerState.ERROR);
         }
-
-        Message updateAudioProgressMsg = new Message();
-
-        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_READY;
-
-        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+        updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_READY);
     }
 
     void initAudioPlayer() {
-
         try {
-
             if (audioPlayer == null) {
-
                 audioPlayer = new MediaPlayer();
-
                 audioPlayer.setOnPreparedListener(this);
-
                 audioPlayer.setOnCompletionListener(this);
-
                 audioPlayer.setOnErrorListener(this);
-
                 updatePlayerState(PlayerState.IDLE);
-
                 updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_INITIALIZED);
             }
 
@@ -252,69 +224,39 @@ public class AudioServiceBinder
     public void onDestroy() {
         Log.d("ANDROID", "onDestroy");
         try {
-
             cleanPlayerNotification();
-
             if (audioPlayer != null) {
-
                 if (audioPlayer.isPlaying()) {
-
                     audioPlayer.stop();
                 }
-
                 audioPlayer.reset();
-
-
                 audioPlayer.release();
-
                 audioPlayer = null;
             }
-
         } catch (Exception e) { /* ignore */ }
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
         updatePlayerState(PlayerState.PREPARED);
-
         ComponentName receiver = new ComponentName(context.getPackageName(),
                 RemoteReceiver.class.getName());
-
         /* Create a new MediaSession */
         mMediaSessionCompat = new MediaSessionCompat(context,
                 AudioServiceBinder.class.getSimpleName(), receiver, null);
-
         mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
                 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
-
         mMediaSessionCompat.setCallback(new MediaSessionCallback(audioPlayer));
-
         mMediaSessionCompat.setActive(true);
-        
         audioPlayer.start();
-
         setAudioMetadata();
-
         updatePlayerState(PlayerState.STARTED);
-
-        // Create update audio player state message.
-        Message updateAudioProgressMsg = new Message();
-
-        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAYING;
-
-        // Send the message to caller activity's update audio Handler object.
-        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
-
+        updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_PLAYING);
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d("ANDROID", "on completion");
-
-
-
     }
 
     @Override
@@ -383,17 +325,11 @@ public class AudioServiceBinder
     }
 
     private void updatePlayerState(PlayerState playerState) {
-
         this.playerState = playerState;
-
         if (mMediaSessionCompat == null) return;
-
         PlaybackStateCompat.Builder newPlaybackState = getPlaybackStateBuilder();
-
         long capabilities = getCapabilities();
-
         newPlaybackState.setActions(capabilities);
-
         int playbackStateCompat = PlaybackStateCompat.STATE_NONE;
 
         switch (this.playerState) {
@@ -429,14 +365,11 @@ public class AudioServiceBinder
         }
 
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
-
         updateNotification(capabilities);
-
     }
 
     private @PlaybackStateCompat.Actions
     long getCapabilities() {
-
         long capabilities = 0;
 
         switch (this.playerState) {
@@ -458,7 +391,6 @@ public class AudioServiceBinder
                 capabilities = 0;
                 break;
         }
-
         return capabilities;
     }
 
@@ -482,6 +414,10 @@ public class AudioServiceBinder
         if ((capabilities & PlaybackStateCompat.ACTION_PLAY) != 0) {
             notificationBuilder.addAction(R.drawable.ic_play, "Play",
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
+        }
+
+        if (capabilities == 0) {
+            notificationBuilder.setContentText("Loading ... ");
         }
 
         NotificationManager notificationManager = (NotificationManager)
