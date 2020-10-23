@@ -292,7 +292,7 @@ public class AudioServiceBinder
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        
+
         audioPlayer.start();
 
         ComponentName receiver = new ComponentName(context.getPackageName(),

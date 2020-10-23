@@ -27,7 +27,7 @@ public class RemoteReceiver extends BroadcastReceiver {
 
                         case KeyEvent.KEYCODE_MEDIA_PLAY:
 
-                            AudioServiceBinder.service.startAudio(0);
+                            AudioServiceBinder.service.startAudio();
 
                             break;
                     }

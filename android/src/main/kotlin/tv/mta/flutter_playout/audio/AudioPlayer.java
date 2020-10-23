@@ -187,7 +187,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             message.put("name", "{}".format(notification));
 
-            service.eventSink.success(message);
+            eventSink.success(message);
 
         } catch (Exception e) {
 
