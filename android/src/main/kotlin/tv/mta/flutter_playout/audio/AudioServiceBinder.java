@@ -159,6 +159,7 @@ public class AudioServiceBinder
         if (audioPlayer != null) {
 
             if (audioPlayer.isPlaying()) {
+                audioPlayer.pause();
                 audioPlayer.stop();
                 updatePlayerState(PlayerState.STOPPED);
             }
