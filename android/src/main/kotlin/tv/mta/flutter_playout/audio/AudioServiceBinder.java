@@ -160,6 +160,7 @@ public class AudioServiceBinder
         if (audioPlayer != null) {
 
             if (audioPlayer.isPlaying()) {
+                Log.d("ANDROID", "isplaying");
                 //audioPlayer.pause();
                 audioPlayer.stop();
                 updatePlayerState(PlayerState.STOPPED);
