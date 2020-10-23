@@ -207,7 +207,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         this.title = (String) args.get("title");
         this.subtitle = (String) args.get("subtitle");
         audioServiceBinder.setupAudioPlayer(this.audioURL, this.title, this.subtitle);
-        //audioServiceBinder.updateRadioInformations();
     }
 
     private void changeMediaInfo(Object arguments){
@@ -216,7 +215,10 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         this.subtitle = (String) args.get("subtitle");
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
-        audioServiceBinder.updateRadioInformations(this.title, this.subtitle);
+        if (audioServiceBinder.getPlayerState() == PlayerState.STARTED) {
+            audioServiceBinder.updateRadioInformations(this.title, this.subtitle);
+        }
+            
         notifyDart("onChangeMediaInfo");
     }
 
@@ -244,7 +246,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         if (audioServiceBinder != null) {
 
-           // audioServiceBinder.reset();
+            audioServiceBinder.pauseAudio();
 
             audioServiceBinder.cleanPlayerNotification();
 

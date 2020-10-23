@@ -109,6 +109,8 @@ public class AudioServiceBinder
         this.audioProgressUpdateHandler = audioProgressUpdateHandler;
     }
 
+    PlayerState getPlayerState() {return playerState;}
+
     private Context getContext() {
         return context;
     }
