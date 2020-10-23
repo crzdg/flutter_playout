@@ -29,7 +29,7 @@ mixin ChannelObserver {
 
   void onError(String error) {/* user implementation */}
 
-  void onChangeMediaInfo(String error) {/* user implementation */}
+  void onChangeMediaInfo() {/* user implementation */}
 
   /// Override this method to get notifications when a seek operation has
   /// finished. This will occur when user finishes scrubbing media.
