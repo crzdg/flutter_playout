@@ -49,20 +49,23 @@ mixin ChannelObserver {
     String eventName = event["name"];
 
     switch (eventName) {
-      case "onInitr":
+      case "onInit":
         onInit();
         break;
-      case "onSetupRadio":
-        onSetupRadio();
+      case "onReady":
+        onReady();
         break;
-      case "onChangeMediaInfo":
-        onChangeMediaInfo();
+      case "onStartPlaying":
+        onStartPlaying();
         break;
-      case "onPlay":
-        onPlay();
+      case "onPlaying":
+        onPlaying();
         break;
-      case "onPause":
-        onPause();
+      case "onPausing":
+        onPausing();
+        break;
+      case "onComplete":
+        onComplete();
         break;
       case "onReset":
         onReset();
