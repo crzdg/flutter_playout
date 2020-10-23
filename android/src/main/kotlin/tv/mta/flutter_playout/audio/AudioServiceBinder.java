@@ -214,6 +214,7 @@ public class AudioServiceBinder
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
+                updatePlaybackState(PlayerState.INITIALIZED);
                 this.playerState = PlayerState.INITIALIZED;
             }
 
@@ -332,7 +333,7 @@ public class AudioServiceBinder
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
-        updatePlaybackState(PlayerState.PAUSED);
+        updatePlaybackState(PlayerState.ERROR);
 
         // Create update audio player state message.
         Message updateAudioPlayerStateMessage = new Message();
@@ -406,23 +407,23 @@ public class AudioServiceBinder
             case PLAYING:
                 playbackStateCompat = PlaybackStateCompat.STATE_PLAYING;
                 break;
-            case PAUSED:
-                playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
-                break;
-            case BUFFERING:
-                playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
-                break;
             case PREPARED:
-                playbackStateCompat = PlaybackStateCompat.STATE_NONE;
+                playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case STOPPED:
                 playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
+                break;
+            case INITIALIZED:
+                playbackStateCompat = PlaybackStateCompat.PAUSED;
+                break;
+            case ERROR:
+                playbackStateCompat = PlaybackStateCompat.STATE_ERROR;
                 break;
             case IDLE:
                 if (mReceivedError) {
                     playbackStateCompat = PlaybackStateCompat.STATE_ERROR;
                 } else {
-                    playbackStateCompat = PlaybackStateCompat.STATE_STOPPED;
+                    playbackStateCompat = PlaybackStateCompat.STATE_NONE;
                 }
                 break;
         }
