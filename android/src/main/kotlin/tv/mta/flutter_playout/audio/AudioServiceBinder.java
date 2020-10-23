@@ -411,10 +411,10 @@ public class AudioServiceBinder
                 playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case STOPPED:
-                playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
+                playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case INITIALIZED:
-                playbackStateCompat = PlaybackStateCompat.PAUSED;
+                playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
                 break;
             case ERROR:
                 playbackStateCompat = PlaybackStateCompat.STATE_ERROR;
