@@ -173,6 +173,8 @@ public class AudioServiceBinder
 
             audioPlayer.release();
 
+            audioPlayer = null;
+
             initAudioPlayer();
 
         }
