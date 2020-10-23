@@ -146,6 +146,8 @@ public class AudioServiceBinder
 
             audioPlayer.prepareAsync();
 
+            updatePlayerState(PlayerState.PREPARING);
+
         }
         service = this;
     }
@@ -167,13 +169,11 @@ public class AudioServiceBinder
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
 
-            updatePlaybackState(PlayerState.STOPPED);
+            updatePlayerState(PlayerState.STOPPED);
 
             audioPlayer.reset();
 
-            this.playerState = PlayerState.IDLE;
-
-            updatePlaybackState(PlayerState.IDLE);
+            updatePlayerState(PlayerState.IDLE);
 
             makeAudioPlayerReady();
 
@@ -193,7 +193,7 @@ public class AudioServiceBinder
 
             audioPlayer = null;
 
-            updatePlaybackState(PlayerState.COMPLETE);
+            updatePlayerState(PlayerState.COMPLETE);
         }
     }
 
@@ -218,12 +218,11 @@ public class AudioServiceBinder
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
-                updatePlaybackState(PlayerState.INITIALIZED);
-                this.playerState = PlayerState.INITIALIZED;
+                updatePlayerState(PlayerState.INITIALIZED);
             }
 
         } catch (IOException e){
-            this.playerState = PlayerState.ERROR;
+            updatePlayerState(PlayerState.ERROR);
         }
 
         Message updateAudioProgressMsg = new Message();
@@ -248,9 +247,9 @@ public class AudioServiceBinder
 
                 audioPlayer.setOnErrorListener(this);
 
-                this.playerState = PlayerState.IDLE;
 
-                updatePlaybackState(PlayerState.IDLE);
+
+                updatePlayerState(PlayerState.IDLE);
 
                 Message updateAudioProgressMsg = new Message();
 
@@ -262,7 +261,7 @@ public class AudioServiceBinder
             }
 
             else {
-                this.playerState = PlayerState.ERROR;
+                updatePlayerState(PlayerState.ERROR);
                 //audioPlayer.start();
             }
 
@@ -299,9 +298,7 @@ public class AudioServiceBinder
     @Override
     public void onPrepared(MediaPlayer mp) {
 
-        updatePlaybackState(PlayerState.PREPARED);
-
-        this.playerState = PlayerState.PREPARED;
+        updatePlayerState(PlayerState.PREPARED);
 
         audioPlayer.start();
 
@@ -321,9 +318,7 @@ public class AudioServiceBinder
 
         setAudioMetadata();
 
-        updatePlaybackState(PlayerState.PLAYING);
-
-        this.playerState = PlayerState.PLAYING;
+        updatePlayerState(PlayerState.STARTED);
 
         // Create update audio player state message.
         Message updateAudioProgressMsg = new Message();
@@ -338,13 +333,13 @@ public class AudioServiceBinder
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.d("on completion", "on completion");
+        Log.d("ANDROID", "on completion");
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
-        updatePlaybackState(PlayerState.ERROR);
+        updatePlayerState(PlayerState.ERROR);
 
         // Create update audio player state message.
         Message updateAudioPlayerStateMessage = new Message();
@@ -402,30 +397,34 @@ public class AudioServiceBinder
                 : new PlaybackStateCompat.Builder(playbackState);
     }
 
-    private void updatePlaybackState(PlayerState playerState) {
+    private void updatePlayerState(PlayerState playerState) {
+
+        this.playerState = playerState;
 
         if (mMediaSessionCompat == null) return;
 
         PlaybackStateCompat.Builder newPlaybackState = getPlaybackStateBuilder();
 
-        long capabilities = getCapabilities(playerState);
+        long capabilities = getCapabilities();
 
         newPlaybackState.setActions(capabilities);
 
         int playbackStateCompat = PlaybackStateCompat.STATE_NONE;
 
-        switch (playerState) {
-            case PLAYING:
+        switch (this.playerState) {
+            case STARTED:
                 playbackStateCompat = PlaybackStateCompat.STATE_PLAYING;
                 break;
             case PREPARED:
+                playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
+                break;
+            case PREPARING:
                 playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case STOPPED:
                 playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case INITIALIZED:
-                Log.d("on init binder", "on init binder");
                 playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
                 break;
             case ERROR:
@@ -446,30 +445,35 @@ public class AudioServiceBinder
         }
 
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
+
         updateNotification(capabilities);
+
+        ;
+
     }
 
     private @PlaybackStateCompat.Actions
-    long getCapabilities(PlayerState playerState) {
+    long getCapabilities() {
+
         long capabilities = 0;
 
-        switch (playerState) {
-            case PLAYING:
-                capabilities |= PlaybackStateCompat.ACTION_PAUSE
-                        | PlaybackStateCompat.ACTION_STOP;
+        switch (this.playerState) {
+            case IDLE:
                 break;
-            case PAUSED:
+            case INITIALIZED:
+                capabilities |= PlaybackStateCompat.ACTION_PLAY;
+                break;
+            case PREPARED:
+                break;
+            case STARTED:
+                capabilities |= PlaybackStateCompat.ACTION_PAUSE;
+                break;
+            case STOPPED:
                 capabilities |= PlaybackStateCompat.ACTION_PLAY
                         | PlaybackStateCompat.ACTION_STOP;
                 break;
-            case BUFFERING:
-                capabilities |= PlaybackStateCompat.ACTION_PAUSE
-                        | PlaybackStateCompat.ACTION_STOP;
-                break;
-            case IDLE:
-                if (!mReceivedError) {
-                    capabilities |= PlaybackStateCompat.ACTION_PLAY;
-                }
+            case PREPARING:
+                capabilities = 0;
                 break;
         }
 
