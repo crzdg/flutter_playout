@@ -447,9 +447,7 @@ public class AudioServiceBinder
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
 
         updateNotification(capabilities);
-
-        ;
-
+        
     }
 
     private @PlaybackStateCompat.Actions
