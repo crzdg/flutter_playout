@@ -12,6 +12,7 @@ public enum PlayerState {
     PREPARED,
     STOPPED,
     STARTED,
+    PREPARING,
     COMPLETE;
 
     private PlayerState() {
