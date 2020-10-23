@@ -229,7 +229,6 @@ public class AudioServiceBinder
 
         updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_READY;
 
-        // Send the message to caller activity's update audio Handler object.
         audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
     }
 
@@ -246,8 +245,6 @@ public class AudioServiceBinder
                 audioPlayer.setOnCompletionListener(this);
 
                 audioPlayer.setOnErrorListener(this);
-
-
 
                 updatePlayerState(PlayerState.IDLE);
 
@@ -444,7 +441,7 @@ public class AudioServiceBinder
                     (long) audioPlayer.getCurrentPosition(), PLAYBACK_RATE);
         }
 
-        mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
+        //mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
 
         updateNotification(capabilities);
 
