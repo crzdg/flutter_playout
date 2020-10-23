@@ -481,12 +481,6 @@ public class AudioServiceBinder
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
         }
 
-        if (capabilities == 0) {
-            notificationBuilder.addAction(R.drawable.ic_loading, "Play",
-                    PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
-        }
-
-
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
