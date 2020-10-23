@@ -418,8 +418,7 @@ public class AudioServiceBinder
         }
 
         if (audioPlayer != null) {
-            newPlaybackState.setState(playbackStateCompat,
-                    (long) audioPlayer.getCurrentPosition(), PLAYBACK_RATE);
+            newPlaybackState.setState(playbackStateCompat, 0, PLAYBACK_RATE);
         }
 
         mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
