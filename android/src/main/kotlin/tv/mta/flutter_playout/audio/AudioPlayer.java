@@ -199,7 +199,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(){
         Log.d("initRadioPlayer", "initRadioPlayer");
         audioServiceBinder.initAudioPlayer();
-        //notifyDart("onInit");
     }
 
     private void setupRadioPlayer(Object arguments){

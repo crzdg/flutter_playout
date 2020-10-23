@@ -130,6 +130,12 @@ public class AudioServiceBinder
         mMediaSessionCompat.setMetadata(metadata);
     }
 
+    private void updateAudioProgressUpdateHandler(int what){
+        Message updateAudioProgressMsg = new Message();
+        updateAudioProgressMsg.what = what;
+        audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+    }
+
     void startAudio() {
         Log.d("startAudio", "startAudio");
 
@@ -137,12 +143,7 @@ public class AudioServiceBinder
 
             Log.d("startAudio", "set update playback state");
 
-            Message updateAudioProgressMsg = new Message();
-
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_START_PLAYING;
-
-            // Send the message to caller activity's update audio Handler object.
-            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+            updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_START_PLAYING);
 
             audioPlayer.prepareAsync();
 
@@ -164,12 +165,7 @@ public class AudioServiceBinder
                 updatePlayerState(PlayerState.STOPPED);
             }
 
-
-            Message updateAudioProgressMsg = new Message();
-
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PAUSING;
-
-            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+            updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_PAUSING);
 
             audioPlayer.release();
 
@@ -231,13 +227,7 @@ public class AudioServiceBinder
 
                 updatePlayerState(PlayerState.IDLE);
 
-                Message updateAudioProgressMsg = new Message();
-
-                updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_INITIALIZED;
-
-                // Send the message to caller activity's update audio Handler object.
-                audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
+                updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_INITIALIZED);
             }
 
             else {
