@@ -319,7 +319,7 @@ public class AudioServiceBinder
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.d("ANDROID", "on error");
-        updatePlayerState(PlayerState.ERROR);
+        //updatePlayerState(PlayerState.ERROR);
 
         // Create update audio player state message.
         Message updateAudioPlayerStateMessage = new Message();
