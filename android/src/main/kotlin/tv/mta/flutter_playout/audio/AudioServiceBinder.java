@@ -189,6 +189,7 @@ public class AudioServiceBinder
         setTitle(title);
         setSubtitle(subtitle);
         setAudioMetadata();
+        updateNotification();
     }
 
     void setupAudioPlayer(String url, String title, String subtitle) {
@@ -485,7 +486,6 @@ public class AudioServiceBinder
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (notificationManager != null) {
-
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
     }
