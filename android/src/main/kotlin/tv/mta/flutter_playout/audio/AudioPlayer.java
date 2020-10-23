@@ -180,18 +180,18 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private static void notifyDart(String notification) {
+    private void notifyDart(String notification) {
         try {
 
             JSONObject message = new JSONObject();
 
             message.put("name", "{}".format(notification));
 
-            eventSink.success(message);
+            service.eventSink.success(message);
 
         } catch (Exception e) {
 
-            Log.e(TAG, "notify_{}: ".foramt(notification), e);
+            Log.e(TAG, "notify_{}: ".format(notification), e);
         }
     }
 
@@ -221,54 +221,12 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         notifyDart("onChangeMediaInfo");
     }
 
-    private void setMedia(Object arguments) {
-        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
 
-        String newUrl = (String) args.get("url");
-
-        bindAudioService();
-
-        this.audioURL = newUrl;
-
-        this.title = (String) args.get("title");
-
-        this.subtitle = (String) args.get("subtitle");
-
-        try {
-
-            this.startPositionInMills = (int) args.get("position");
-
-        } catch (Exception e) { /* ignore */ }
+    private void play() {
 
         if (audioServiceBinder != null) {
 
-            try {
-
-                audioServiceBinder.reset();
-
-            } catch (Exception e) { /* ignore */}
-
-        audioServiceBinder.setMediaChanging(true);
-        }
-
-        audioServiceBinder.setAudioFileUrl(this.audioURL);
-
-        audioServiceBinder.setTitle(this.title);
-
-        audioServiceBinder.setSubtitle(this.subtitle);
-
-        //audioServiceBinder.setMedia();
-
-        notifyDartOnMediaSet();
-
-    }
-
-
-    private void play(Object arguments) {
-
-        if (audioServiceBinder != null) {
-
-            audioServiceBinder.startAudio(startPositionInMills);
+            audioServiceBinder.startAudio();
 
         }
 
@@ -316,35 +274,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private void onDuration() {
 
-        try {
-
-            if (audioServiceBinder != null &&
-                    audioServiceBinder.getAudioPlayer() != null &&
-                    !audioServiceBinder.isMediaChanging()) {
-
-                int newDuration = audioServiceBinder.getAudioPlayer().getDuration();
-
-                if (newDuration != mediaDuration) {
-
-                    mediaDuration = newDuration;
-
-                    JSONObject message = new JSONObject();
-
-                    message.put("name", "onDuration");
-
-                    message.put("duration", mediaDuration);
-
-                    eventSink.success(message);
-                }
-            }
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "onDuration: ", e);
-        }
-    }
 
     /**
      * Bind background service with caller activity. Then this activity can use
@@ -380,7 +310,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         switch (call.method) {
             case "play": {
-                play(call.arguments);
+                play();
                 result.success(true);
                 break;
             }
@@ -452,37 +382,37 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                 if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_INITIALIZED) {
 
-                    notifyDart("onInit");
+                    service.notifyDart("onInit");
 
                 }
 
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_READY) {
 
-                    notifyDart("onReady");
+                    service.notifyDart("onReady");
 
                 }
 
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_START_PLAYING) {
 
-                    notifyDart("onStartPlaying");
+                    service.notifyDart("onStartPlaying");
 
                 }
 
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
 
-                    notifyDart("onPlaying");
+                    service.notifyDart("onPlaying");
 
                 }
 
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
 
-                    notifyDart("onPausing");
+                    service.notifyDart("onPausing");
 
                 }
 
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
 
-                    notifyDart("onComplete");
+                    service.notifyDart("onComplete");
 
                 }
 

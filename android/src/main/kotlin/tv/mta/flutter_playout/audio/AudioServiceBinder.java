@@ -130,9 +130,8 @@ public class AudioServiceBinder
         mMediaSessionCompat.setMetadata(metadata);
     }
 
-    void startAudio(int startPositionInMills) {
+    void startAudio() {
         Log.d("startAudio", "startAudio");
-        this.startPositionInMills = startPositionInMills;
 
         if (audioPlayer != null && audioPlayer.isPlaying() == false) {
 
@@ -163,7 +162,7 @@ public class AudioServiceBinder
             // Create update audio player state message.
             Message updateAudioProgressMsg = new Message();
 
-            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PAUSE;
+            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PAUSING;
 
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
@@ -270,8 +269,6 @@ public class AudioServiceBinder
     @Override
     public void onDestroy() {
 
-        isBound = false;
-
         try {
 
             cleanPlayerNotification();
@@ -295,11 +292,7 @@ public class AudioServiceBinder
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
-        isPlayerReady = true;
-
-        isBound = true;
-
+        
         audioPlayer.start();
 
         ComponentName receiver = new ComponentName(context.getPackageName(),
