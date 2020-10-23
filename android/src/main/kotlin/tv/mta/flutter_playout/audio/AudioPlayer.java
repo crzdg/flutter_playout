@@ -338,6 +338,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             case "changeMediaInfo": {
                 changeMediaInfo(call.arguments);
                 result.success(true);
+                break;
             }
             default:
                 result.notImplemented();
