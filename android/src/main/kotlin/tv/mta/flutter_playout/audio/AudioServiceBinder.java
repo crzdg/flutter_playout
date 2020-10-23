@@ -185,6 +185,12 @@ public class AudioServiceBinder
         }
     }
 
+    void updateRadioInformations(String title, String subtitle) {
+        setTitle(title);
+        setSubtitle(subtitle);
+        setAudioMetadata();
+    }
+
     void setupAudioPlayer(String url, String title, String subtitle) {
         setAudioFileUrl(url);
         setTitle(title);
@@ -475,6 +481,10 @@ public class AudioServiceBinder
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
         }
 
+        if (capabilities == 0) {
+            notificationBuilder.addAction(R.drawable.ic_loading, "Play",
+                    PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
+        }
 
 
         NotificationManager notificationManager = (NotificationManager)
