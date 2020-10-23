@@ -157,19 +157,16 @@ public class AudioServiceBinder
         if (audioPlayer != null) {
 
             if (audioPlayer.isPlaying()) {
-
                 audioPlayer.stop();
+                updatePlayerState(PlayerState.STOPPED);
             }
 
-            // Create update audio player state message.
+
             Message updateAudioProgressMsg = new Message();
 
             updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PAUSING;
 
-            // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
-            updatePlayerState(PlayerState.STOPPED);
 
             audioPlayer.reset();
 
@@ -177,23 +174,6 @@ public class AudioServiceBinder
 
             makeAudioPlayerReady();
 
-        }
-    }
-
-    void reset() {
-
-        if (audioPlayer != null) {
-
-            if (audioPlayer.isPlaying()) {
-
-                audioPlayer.stop();
-            }
-
-            audioPlayer.reset();
-
-            audioPlayer = null;
-
-            updatePlayerState(PlayerState.COMPLETE);
         }
     }
 
@@ -441,7 +421,7 @@ public class AudioServiceBinder
                     (long) audioPlayer.getCurrentPosition(), PLAYBACK_RATE);
         }
 
-        //mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
+        mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
 
         updateNotification(capabilities);
 
@@ -540,22 +520,17 @@ public class AudioServiceBinder
 
         @Override
         public void onPause() {
-            audioPlayer.pause();
+            audioPlayer.pauseAudio();
         }
 
         @Override
         public void onPlay() {
-            audioPlayer.start();
-        }
-
-        @Override
-        public void onSeekTo(long pos) {
-            audioPlayer.seekTo((int) pos);
+            audioPlayer.startAudio();
         }
 
         @Override
         public void onStop() {
-            audioPlayer.stop();
+            audioPlayer.pauseAudio();
         }
     }
 }
