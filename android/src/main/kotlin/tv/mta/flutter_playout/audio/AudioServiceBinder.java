@@ -160,7 +160,7 @@ public class AudioServiceBinder
 
             if (audioPlayer.isPlaying()) {
                 //audioPlayer.pause();
-                //audioPlayer.stop();
+                audioPlayer.stop();
                 updatePlayerState(PlayerState.STOPPED);
             }
 
@@ -171,11 +171,9 @@ public class AudioServiceBinder
 
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
 
-            audioPlayer.reset();
+            audioPlayer.release();
 
-            updatePlayerState(PlayerState.IDLE);
-
-            makeAudioPlayerReady();
+            initAudioPlayer();
 
         }
     }
@@ -314,6 +312,9 @@ public class AudioServiceBinder
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.d("ANDROID", "on completion");
+
+
+
     }
 
     @Override
