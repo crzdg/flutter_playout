@@ -24,22 +24,9 @@ class Audio with ChannelObserver {
   String _url;
   String _title;
   String _subtitle;
-  Duration _position;
-  bool _isLiveStream;
 
   PlayerState getPlayerState() {
     return _state;
-  }
-
-  @override
-  void onError(String error) {
-    _state = PlayerState.ERROR;
-  }
-
-  @override
-  void onInit() {
-    _state = PlayerState.INITIALIZED;
-    return;
   }
 
   Future<void> init() async {
@@ -47,11 +34,10 @@ class Audio with ChannelObserver {
   }
 
   Future<void> setup(String url, String title,
-      String subtitle, Duration position) async {
+      String subtitle) async {
     this._url = url;
     this._title = title;
     this._subtitle = subtitle;
-    this._position = position;
     return _audioChannel.invokeMethod("setup", <String, dynamic>{
       "url": url,
       "title": title,
@@ -80,22 +66,32 @@ class Audio with ChannelObserver {
     return _audioChannel.invokeMethod("reset");
   }
 
-  @override
-  void onReset(){
-    this._state = PlayerState.INITIALIZED;
-  }
-
   Future<void> dispose() async {
     return _audioChannel.invokeMethod("dispose");
   }
 
 
   @override
+  void onReset(){
+    this._state = PlayerState.INITIALIZED;
+  }
+
+  @override
+  void onError(String error) {
+    _state = PlayerState.ERROR;
+  }
+
+  @override
+  void onInit() {
+    _state = PlayerState.INITIALIZED;
+    return;
+  }
+
+  @override
   void onDispose(){
     _instance = null;
     this._state = PlayerState.COMPLETE;
   }
-
 
   @override
   void onReady() {
