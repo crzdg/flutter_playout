@@ -520,17 +520,17 @@ public class AudioServiceBinder
 
         @Override
         public void onPause() {
-            audioPlayer.pauseAudio();
+            pauseAudio();
         }
 
         @Override
         public void onPlay() {
-            audioPlayer.startAudio();
+            startAudio();
         }
 
         @Override
         public void onStop() {
-            audioPlayer.pauseAudio();
+            pauseAudio();
         }
     }
 }
