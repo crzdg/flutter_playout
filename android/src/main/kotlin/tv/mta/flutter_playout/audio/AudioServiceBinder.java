@@ -171,6 +171,10 @@ public class AudioServiceBinder
 
             audioPlayer.reset();
 
+            this.playerState = PlayerState.IDLE;
+
+            updatePlaybackState(PlayerState.IDLE);
+
             makeAudioPlayerReady();
 
         }
@@ -282,6 +286,7 @@ public class AudioServiceBinder
                 }
 
                 audioPlayer.reset();
+
 
                 audioPlayer.release();
 
@@ -420,6 +425,7 @@ public class AudioServiceBinder
                 playbackStateCompat = PlaybackStateCompat.STATE_BUFFERING;
                 break;
             case INITIALIZED:
+                Log.d("on init binder", "on init binder");
                 playbackStateCompat = PlaybackStateCompat.STATE_PAUSED;
                 break;
             case ERROR:
