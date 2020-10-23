@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_playout/channel_observer.dart';
 import 'package:flutter_playout/player_state.dart';
-import 'package:flutter_playout/player_state_oberserver.dart';
 
 /// See [play] method as well as example app on how to use.
 class Audio with ChannelObserver {
@@ -12,8 +11,6 @@ class Audio with ChannelObserver {
    this._state = PlayerState.CREATED;
    listenForAudioPlayerEvents();
   }
-
-  List<PlayerStateObserver> _playerStateObservers = new List();
 
   static Audio _instance;
   static Audio instance() {
@@ -30,16 +27,6 @@ class Audio with ChannelObserver {
   Duration _position;
   bool _isLiveStream;
 
-  void registerPlayerStateObserver(PlayerStateObserver observer){
-    _playerStateObservers.add(observer);
-    return;
-  }
-
-  void informPlayerStateObservers(String command){
-    _playerStateObservers.forEach(
-            (PlayerStateObserver observer) => observer.processEvent(command));
-  }
-
   PlayerState getPlayerState() {
     return _state;
   }
@@ -47,13 +34,11 @@ class Audio with ChannelObserver {
   @override
   void onError(String error) {
     _state = PlayerState.ERROR;
-    informPlayerStateObservers("onError");
   }
 
   @override
   void onInit() {
     _state = PlayerState.INITIALIZED;
-    informPlayerStateObservers("onInitialized");
     return;
   }
 
@@ -74,8 +59,6 @@ class Audio with ChannelObserver {
     });
   }
 
-
-  /// Change Media info of the player. Used to update title and subtitle.
   Future<void> changeMediaInfo(String title, String subtitle) async {
     this._title = title;
     this._subtitle = subtitle;
@@ -85,13 +68,6 @@ class Audio with ChannelObserver {
     });
   }
 
-
-  /// Plays given [url] with native player. The [title] and [subtitle]
-  /// are used for lock screen info panel on both iOS & Android. Optionally pass
-  /// in current [position] to start playback from that point. The
-  /// [isLiveStream] flag is only used on iOS to change the scrub-bar look
-  /// on lock screen info panel. It has no affect on the actual functionality
-  /// of the plugin. Defaults to false.
   Future<void> play() async {
         return _audioChannel.invokeMethod("play");
     }
@@ -107,18 +83,17 @@ class Audio with ChannelObserver {
   @override
   void onReset(){
     this._state = PlayerState.INITIALIZED;
-    informPlayerStateObservers("onReset");
   }
 
   Future<void> dispose() async {
     return _audioChannel.invokeMethod("dispose");
   }
 
+
   @override
   void onDispose(){
     _instance = null;
     this._state = PlayerState.COMPLETE;
-    informPlayerStateObservers("onDispose");
   }
 
 

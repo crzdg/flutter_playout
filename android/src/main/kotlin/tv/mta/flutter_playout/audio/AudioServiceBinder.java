@@ -49,18 +49,13 @@ public class AudioServiceBinder
     private static final int NOTIFICATION_ID = 0;
     static AudioServiceBinder service;
     // This is the message signal that inform audio progress updater to update audio progress.
-    final int UPDATE_AUDIO_PROGRESS_BAR = 1;
-    final int UPDATE_PLAYER_STATE_TO_PAUSE = 2;
-    final int UPDATE_PLAYER_STATE_TO_PLAY = 3;
-    final int UPDATE_PLAYER_STATE_TO_COMPLETE = 4;
-    final int UPDATE_AUDIO_DURATION = 5;
-    final int UPDATE_PLAYER_STATE_TO_ERROR = 6;
-    final int UPDATE_PLAYER_STATE_TO_PREPARED = 7;
-    final int UPDATE_PLAYER_STATE_TO_INITIALIZED = 8;
-    final int UPDATE_PLAYER_STATE_TO_READY = 10;
-    final int UPDATE_PLAYER_STATE_TO_START_PLAYING = 11;
-    final int UPDATE_PLAYER_STATE_TO_PLAYING = 12;
-    final int UPDATE_PLAYER_STATE_TO_PAUSING = 13;
+    final int UPDATE_PLAYER_STATE_TO_COMPLETE = 1;
+    final int UPDATE_PLAYER_STATE_TO_ERROR = 2;
+    final int UPDATE_PLAYER_STATE_TO_INITIALIZED = 3;
+    final int UPDATE_PLAYER_STATE_TO_READY = 4;
+    final int UPDATE_PLAYER_STATE_TO_START_PLAYING = 5;
+    final int UPDATE_PLAYER_STATE_TO_PLAYING = 6;
+    final int UPDATE_PLAYER_STATE_TO_PAUSING = 7;
     private PlayerState playerState = PlayerState.CREATED;
 
 
@@ -165,12 +160,6 @@ public class AudioServiceBinder
                 audioPlayer.stop();
             }
 
-            updatePlaybackState(PlayerState.STOPPED);
-
-            audioPlayer.reset();
-
-            makeRadioPlayerReady();
-
             // Create update audio player state message.
             Message updateAudioProgressMsg = new Message();
 
@@ -178,6 +167,12 @@ public class AudioServiceBinder
 
             // Send the message to caller activity's update audio Handler object.
             audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
+            updatePlaybackState(PlayerState.STOPPED);
+
+            audioPlayer.reset();
+
+            makeAudioPlayerReady();
 
         }
     }
@@ -209,7 +204,14 @@ public class AudioServiceBinder
         }
     }
 
-    void setupAudioPlayer() {
+    void setupAudioPlayer(String url, String title, String subtitle) {
+        setAudioFileUrl(url);
+        setTitle(title);
+        setSubtitle(subtitle);
+        makeAudioPlayerReady();
+    }
+
+    private void makeAudioPlayerReady() {
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
@@ -222,11 +224,10 @@ public class AudioServiceBinder
 
         Message updateAudioProgressMsg = new Message();
 
-        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_INITIALIZED;
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_READY;
 
         // Send the message to caller activity's update audio Handler object.
         audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
-
     }
 
     void initAudioPlayer() {
@@ -246,6 +247,13 @@ public class AudioServiceBinder
                 this.playerState = PlayerState.IDLE;
 
                 updatePlaybackState(PlayerState.IDLE);
+
+                Message updateAudioProgressMsg = new Message();
+
+                updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_INITIALIZED;
+
+                // Send the message to caller activity's update audio Handler object.
+                audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
 
             }
 

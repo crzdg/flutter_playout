@@ -180,7 +180,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private void notifyDart(String notification) {
+    private static void notifyDart(String notification) {
         try {
 
             JSONObject message = new JSONObject();
@@ -199,7 +199,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void initRadioPlayer(){
         Log.d("initRadioPlayer", "initRadioPlayer");
         audioServiceBinder.initAudioPlayer();
-        notifyDart("onInit");
+        //notifyDart("onInit");
     }
 
     private void setupRadioPlayer(Object arguments){
@@ -207,12 +207,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         this.audioURL = (String) args.get("url");
         this.title = (String) args.get("title");
         this.subtitle = (String) args.get("subtitle");
-        audioServiceBinder.setAudioFileUrl(this.audioURL);
-        audioServiceBinder.setTitle(this.title);
-        audioServiceBinder.setSubtitle(this.subtitle);
-        notifyDart("onSetup");
-        audioServiceBinder.makeRadioPlayerReady();
-        notifyDart("onReady");
+        audioServiceBinder.setupAudioPlayer(this.audioURL, this.title, this.subtitle);
         //audioServiceBinder.updateRadioInformations();
     }
 
@@ -455,69 +450,42 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             if (service != null && service.audioServiceBinder != null) {
 
-                /* The update process message is sent from AudioServiceBinder class's thread object */
-                if (msg.what == service.audioServiceBinder.UPDATE_AUDIO_PROGRESS_BAR) {
+                if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_INITIALIZED) {
 
-                    try {
-
-                        int position = service.audioServiceBinder.getCurrentAudioPosition();
-
-                        int duration = service.audioServiceBinder.getAudioPlayer().getDuration();
-
-                        if (position <= duration) {
-
-                            JSONObject message = new JSONObject();
-
-                            message.put("name", "onTime");
-
-                            message.put("time",
-                                    service.audioServiceBinder.getCurrentAudioPosition() / 1000);
-
-                            service.eventSink.success(message);
-                        }
-
-                    } catch (Exception e) { /* ignore */ }
-
-                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PAUSE) {
-
-                    service.notifyDartOnPause();
+                    notifyDart("onInit");
 
                 }
 
-                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAY) {
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_READY) {
 
-                    service.notifyDartOnPlay();
-
-                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_COMPLETE) {
-
-                    service.notifyDartOnComplete();
-
-                } else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_ERROR) {
-
-                    service.notifyDartOnError(msg.obj.toString());
-
-                } else if (msg.what == service.audioServiceBinder.UPDATE_AUDIO_DURATION) {
-
-                    service.onDuration();
+                    notifyDart("onReady");
 
                 }
 
-                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_INITIALIZED) {
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_START_PLAYING) {
 
-                    try {
-
-                        JSONObject message = new JSONObject();
-
-                        message.put("name", "onSetupRadio");
-
-                        service.eventSink.success(message);
-
-                    } catch (Exception e) {
-
-                        Log.e(service.TAG, "notifyDartOnPrepared: ", e);
-                    }
+                    notifyDart("onStartPlaying");
 
                 }
+
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
+
+                    notifyDart("onPlaying");
+
+                }
+
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
+
+                    notifyDart("onPausing");
+
+                }
+
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
+
+                    notifyDart("onComplete");
+
+                }
+
             }
         }
     }
