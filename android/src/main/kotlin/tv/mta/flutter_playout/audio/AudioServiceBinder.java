@@ -417,7 +417,7 @@ public class AudioServiceBinder
         }
 
         if (capabilities == 0) {
-            notificationBuilder.setContentSubText("Loading ... ");
+            notificationBuilder.setSubText("Loading ... ");
         }
 
         NotificationManager notificationManager = (NotificationManager)
