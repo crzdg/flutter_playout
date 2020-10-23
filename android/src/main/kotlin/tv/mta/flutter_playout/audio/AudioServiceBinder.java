@@ -168,11 +168,9 @@ public class AudioServiceBinder
 
             updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_PAUSING);
 
-            audioPlayer.release();
+            audioPlayer.reset();
 
-            audioPlayer = null;
-
-            initAudioPlayer();
+            makeAudioPlayerReady();
 
         }
     }
