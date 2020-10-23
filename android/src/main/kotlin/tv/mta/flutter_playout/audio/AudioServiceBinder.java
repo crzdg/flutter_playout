@@ -417,7 +417,8 @@ public class AudioServiceBinder
         }
 
         if (capabilities == 0) {
-            notificationBuilder.setSubText("Loading ... ");
+            notificationBuilder.setStyle(new Notification.InboxStyle()
+                    .addLine("Loading ..."));
         }
 
         NotificationManager notificationManager = (NotificationManager)
