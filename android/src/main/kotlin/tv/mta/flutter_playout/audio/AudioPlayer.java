@@ -230,8 +230,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         }
 
-        notifyDart("onStartPlaying");
-
     }
 
     private void pause() {
@@ -240,8 +238,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.pauseAudio();
         }
-
-        notifyDart("onPausing");
+        
     }
 
     private void reset() {
