@@ -73,7 +73,7 @@ mixin ChannelObserver {
         break;
       case "onChangeMediaInfo":
         onChangeMediaInfo();
-        break();
+        break;
       case "onDispose":
         onDispose();
         break;
