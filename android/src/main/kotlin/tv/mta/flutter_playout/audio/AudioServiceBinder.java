@@ -294,6 +294,10 @@ public class AudioServiceBinder
     @Override
     public void onPrepared(MediaPlayer mp) {
 
+        updatePlaybackState(PlayerState.PREPARED);
+
+        this.playerState = PlayerState.PREPARED;
+
         audioPlayer.start();
 
         ComponentName receiver = new ComponentName(context.getPackageName(),
@@ -313,6 +317,8 @@ public class AudioServiceBinder
         setAudioMetadata();
 
         updatePlaybackState(PlayerState.PLAYING);
+
+        this.playerState = PlayerState.PLAYING;
 
         // Create update audio player state message.
         Message updateAudioProgressMsg = new Message();
