@@ -360,6 +360,10 @@ public class AudioServiceBinder
                 errorMessage = "MEDIA_ERROR_UNKNOWN: Unspecified media player error";
                 break;
         }
+
+        Log.e("AudioServiceBinder", errorMessage, null);
+
+
         updateAudioPlayerStateMessage.obj = errorMessage;
 
         // Send the message to caller activity's update audio Handler object.
