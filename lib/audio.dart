@@ -14,6 +14,7 @@ class Audio with ChannelObserver {
   }
 
   List<PlayerStateObserver> _playerStateObservers = new List();
+
   static Audio _instance;
   static Audio instance() {
     if (_instance == null) {
@@ -43,10 +44,6 @@ class Audio with ChannelObserver {
     return _state;
   }
 
-  Future<void> initRadioPlayer() async {
-    return _audioChannel.invokeMethod("initRadioPlayer");
-  }
-
   @override
   void onError(String error) {
     _state = PlayerState.ERROR;
@@ -54,32 +51,27 @@ class Audio with ChannelObserver {
   }
 
   @override
-  void onInitRadioPlayer() {
+  void onInit() {
     _state = PlayerState.INITIALIZED;
     informPlayerStateObservers("onInitialized");
     return;
   }
 
+  Future<void> init() async {
+    return _audioChannel.invokeMethod("init");
+  }
 
-
-  Future<void> setUpRadio(String url, String title,
+  Future<void> setup(String url, String title,
       String subtitle, Duration position) async {
     this._url = url;
     this._title = title;
     this._subtitle = subtitle;
     this._position = position;
-    return _audioChannel.invokeMethod("setupRadio", <String, dynamic>{
+    return _audioChannel.invokeMethod("setup", <String, dynamic>{
       "url": url,
       "title": title,
-      "subtitle": subtitle,
-      "position": position.inMilliseconds
+      "subtitle": subtitle
     });
-  }
-
-  @override
-  void onSetupRadio() {
-    _state = PlayerState.READY;
-    informPlayerStateObservers("onReady");
   }
 
 
@@ -93,23 +85,6 @@ class Audio with ChannelObserver {
     });
   }
 
-  @override
-  void onChangeMediaInfo() {
-    informPlayerStateObservers("onChangeMediaInfo");
-  }
-
-  Future<void> changeRadioURL(String url) async {
-    this._url = url;
-    return _audioChannel.invokeMethod("changeRadioURL", <String, dynamic>{
-        "url": url,
-      });
-  }
-
-  @override
-  void onChangeRadioURL() {
-    informPlayerStateObservers("onChangeRadioURL");
-  }
-
 
   /// Plays given [url] with native player. The [title] and [subtitle]
   /// are used for lock screen info panel on both iOS & Android. Optionally pass
@@ -121,30 +96,8 @@ class Audio with ChannelObserver {
         return _audioChannel.invokeMethod("play");
     }
 
-  @override
-  void onPlay(){
-    this._state = PlayerState.PLAYING;
-    informPlayerStateObservers("onPlaying");
-  }
-
   Future<void> pause() async {
     return _audioChannel.invokeMethod("pause");
-  }
-
-  @override
-  void onPause(){
-    this._state = PlayerState.PAUSED;
-    informPlayerStateObservers("onPaused");
-  }
-
-  Future<void> stop() async {
-    return _audioChannel.invokeListMethod("stop");
-  }
-
-  @override
-  void onStop(){
-    this._state = PlayerState.STOPPED;
-    informPlayerStateObservers("onStopped");
   }
 
   Future<void> reset() async {
@@ -167,5 +120,37 @@ class Audio with ChannelObserver {
     this._state = PlayerState.COMPLETE;
     informPlayerStateObservers("onDispose");
   }
+
+
+  @override
+  void onReady() {
+    _state = PlayerState.READY;
+    return;
+  }
+
+  @override
+  void onStartPlaying() {
+    _state = PlayerState.START_PLAYING;
+    return;
+  }
+
+  @override
+  void onPlaying() {
+    _state = PlayerState.PLAYING;
+    return;
+  }
+
+  @override
+  void onPausing() {
+    _state = PlayerState.PAUSING;
+    return;
+  }
+
+  @override
+  void onComplete() {
+    _state = PlayerState.COMPLETE;
+    return;
+  }
+
 
 }

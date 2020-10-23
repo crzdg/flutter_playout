@@ -2,27 +2,26 @@
 enum PlayerState {
 
   /// Player is stopped TODO: will be deprecated!
-  STOPPED,
+  CREATED,
 
   /// Player is initialized
   INITIALIZED,
 
-  /// Player is ready to play
+  /// Currently playing. The user can [pause] or [resume] the playback.
   READY,
 
-  /// Currently playing. The user can [pause] or [resume] the playback.
-  PLAYING,
-
   /// Paused. The user can [resume] the playback without providing the URL.
-  PAUSED,
+  START_PLAYING,
 
   /// Created. state after object initialization (flutter and native side).
-  CREATED,
+  PLAYING,
 
   /// An error occured in the player.
-  ERROR,
+  PAUSING,
 
   /// Player is destroyed properly. A new player instance could be initialized
-  COMPLETE
+  COMPLETE,
+
+  ERROR
 
 }

@@ -7,29 +7,25 @@ import 'package:flutter/services.dart';
 mixin ChannelObserver {
   Future<void> listenForAudioPlayerEvents() async {
     EventChannel eventChannel =
-        EventChannel("tv.mta/NativeAudioEventChannel", JSONMethodCodec());
+    EventChannel("tv.mta/NativeAudioEventChannel", JSONMethodCodec());
     eventChannel.receiveBroadcastStream().listen(_processEvent);
   }
 
-  void onInitRadioPlayer() {/* user implementation */}
+  void onInit() {/* user implementation */}
 
-  void onSetupRadio() {/* user implementation */}
+  void onReady()  { /* user implementation */ }
 
-  void onChangeRadioURL()  { /* user implementation */ }
+  void onStartPlaying() { /* user implementation */ }
 
-  void onChangeMediaInfo() { /* user implementation */ }
+  void onPlaying() {/* user implementation */}
 
-  void onPlay() {/* user implementation */}
-
-  void onPause() {/* user implementation */}
+  void onPausing() {/* user implementation */}
 
   void onReset() {/* user implementation */}
 
   void onDispose() {/* user implementation */}
 
-  //void onComplete() {/* user implementation */}
-
-  //void onTime(int position) {/* user implementation */}
+  void onComplete() {/* user implementation */}
 
   void onError(String error) {/* user implementation */}
 
@@ -53,8 +49,8 @@ mixin ChannelObserver {
     String eventName = event["name"];
 
     switch (eventName) {
-      case "onInitRadioPlayer":
-        onInitRadioPlayer();
+      case "onInitr":
+        onInit();
         break;
       case "onSetupRadio":
         onSetupRadio();
@@ -82,3 +78,4 @@ mixin ChannelObserver {
     }
   }
 }
+

@@ -180,38 +180,39 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private void initRadioPlayer(){
-        Log.d("initRadioPlayer", "initRadioPlayer");
-        audioServiceBinder.initAudioPlayer();
+    private void notifyDart(String notification) {
         try {
+
             JSONObject message = new JSONObject();
-            message.put("name", "onInitRadioPlayer");
-            Log.d("initRadioPlayer", "sink init");
-            this.eventSink.success(message);
+
+            message.put("name", "{}".format(notification));
+
+            eventSink.success(message);
+
         } catch (Exception e) {
-            Log.e(TAG, "initRadioPlayerError: ", e);
+
+            Log.e(TAG, "notify_{}: ".foramt(notification), e);
         }
     }
 
-    private void setupRadio(Object arguments){
+
+    private void initRadioPlayer(){
+        Log.d("initRadioPlayer", "initRadioPlayer");
+        audioServiceBinder.initAudioPlayer();
+        notifyDart("onInit");
+    }
+
+    private void setupRadioPlayer(Object arguments){
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
         this.audioURL = (String) args.get("url");
         this.title = (String) args.get("title");
         this.subtitle = (String) args.get("subtitle");
-        try {
-            this.startPositionInMills = (int) args.get("position");
-        } catch (Exception e) { /* ignore */ }
         audioServiceBinder.setAudioFileUrl(this.audioURL);
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
+        notifyDart("onSetup");
         audioServiceBinder.makeRadioPlayerReady();
-        try {
-            JSONObject message = new JSONObject();
-            message.put("name", "onReady");
-            eventSink.success(message);
-        } catch (Exception e) {
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
-        }
+        notifyDart("onReady");
         //audioServiceBinder.updateRadioInformations();
     }
 
@@ -222,40 +223,8 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.setTitle(this.title);
         audioServiceBinder.setSubtitle(this.subtitle);
         //audioServiceBinder.updateRadioInformations();
-        try {
-            JSONObject message = new JSONObject();
-            message.put("name", "onChangeMediaInfo");
-            eventSink.success(message);
-        } catch (Exception e) {
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
-        }
+        notifyDart("onChangeMediaInfo");
     }
-
-    private void changeRadioURL(Object arguments){
-        java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
-        this.audioURL = (String) args.get("url");
-        audioServiceBinder.setAudioFileUrl(this.audioURL);
-        if (audioServiceBinder != null) {
-
-            try {
-
-                audioServiceBinder.reset();
-
-            } catch (Exception e) { /* ignore */}
-
-            audioServiceBinder.setMediaChanging(true);
-        }
-        //audioServiceBinder.updateRadioURL();
-        this.playerState = PlayerState.READY;
-        try {
-            JSONObject message = new JSONObject();
-            message.put("name", "onChangeRadioURL");
-            eventSink.success(message);
-        } catch (Exception e) {
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
-        }
-    }
-
 
     private void setMedia(Object arguments) {
         java.util.HashMap<String, Object> args = (java.util.HashMap<String, Object>) arguments;
@@ -299,21 +268,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     }
 
-    private void notifyDartOnMediaSet() {
-        try {
-
-            JSONObject message = new JSONObject();
-
-            message.put("name", "onMediaSet");
-
-            eventSink.success(message);
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "notifyDartOnMediaSet: ", e);
-        }
-    }
-
 
     private void play(Object arguments) {
 
@@ -323,7 +277,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         }
 
-        notifyDartOnPlay();
+        notifyDart("onStartPlaying");
 
     }
 
@@ -334,7 +288,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             audioServiceBinder.pauseAudio();
         }
 
-        notifyDartOnPause();
+        notifyDart("onPausing");
     }
 
     private void reset() {
@@ -346,54 +300,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             audioServiceBinder.cleanPlayerNotification();
 
             audioServiceBinder = null;
-        }
-    }
-
-    private void notifyDartOnPlay() {
-
-        try {
-
-            JSONObject message = new JSONObject();
-
-            message.put("name", "onPlay");
-
-            eventSink.success(message);
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "notifyDartOnPlay: ", e);
-        }
-    }
-
-    private void notifyDartOnPause() {
-
-        try {
-
-            JSONObject message = new JSONObject();
-
-            message.put("name", "onPause");
-
-            eventSink.success(message);
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "notifyDartOnPause: ", e);
-        }
-    }
-
-    private void notifyDartOnComplete() {
-
-        try {
-
-            JSONObject message = new JSONObject();
-
-            message.put("name", "onComplete");
-
-            eventSink.success(message);
-
-        } catch (Exception e) {
-
-            Log.e(TAG, "notifyDartOnComplete: ", e);
         }
     }
 
@@ -412,25 +318,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         } catch (Exception e) {
 
             Log.e(TAG, "notifyDartOnError: ", e);
-        }
-    }
-
-    private void seekTo(Object arguments) {
-
-        try {
-
-            java.util.HashMap<String, Double> args = (java.util.HashMap<String, Double>) arguments;
-
-            Double position = args.get("second");
-
-            if (audioServiceBinder != null && position != null) {
-
-                audioServiceBinder.seekAudio(position.intValue());
-            }
-
-        } catch (Exception e) {
-
-            notifyDartOnError(e.getMessage());
         }
     }
 
@@ -512,7 +399,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 result.success(true);
                 break;
             }
-            case "initRadioPlayer": {
+            case "init": {
                 //seekTo(call.arguments);
                 bindAudioService();
                 result.success(true);
@@ -523,18 +410,14 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 result.success(true);
                 break;
             }
-            case "setupRadio": {
+            case "setup": {
                 //setMedia(call.arguments);
-                setupRadio(call.arguments);
+                setupRadioPlayer(call.arguments);
                 result.success(true);
                 break;
             }
             case "changeMediaInfo": {
                 changeMediaInfo(call.arguments);
-                result.success(true);
-            }
-            case "changeRadioURL": {
-                changeRadioURL(call.arguments);
                 result.success(true);
             }
             default:

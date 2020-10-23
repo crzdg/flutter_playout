@@ -57,11 +57,12 @@ public class AudioServiceBinder
     final int UPDATE_PLAYER_STATE_TO_ERROR = 6;
     final int UPDATE_PLAYER_STATE_TO_PREPARED = 7;
     final int UPDATE_PLAYER_STATE_TO_INITIALIZED = 8;
+    final int UPDATE_PLAYER_STATE_TO_READY = 10;
+    final int UPDATE_PLAYER_STATE_TO_START_PLAYING = 11;
+    final int UPDATE_PLAYER_STATE_TO_PLAYING = 12;
+    final int UPDATE_PLAYER_STATE_TO_PAUSING = 13;
     private PlayerState playerState = PlayerState.CREATED;
-    private boolean isPlayerReady = false;
-    private boolean isBound = true;
 
-    private boolean isMediaChanging = false;
 
     /**
      * Whether the {@link MediaPlayer} broadcasted an error.
@@ -75,8 +76,6 @@ public class AudioServiceBinder
     private String subtitle = "";
 
     private MediaPlayer audioPlayer = null;
-
-    private int startPositionInMills = 0;
 
     // This Handler object is a reference to the caller activity's Handler.
     // In the caller activity's handler, it will update the audio play progress.
@@ -127,14 +126,6 @@ public class AudioServiceBinder
         this.activity = activity;
     }
 
-    boolean isMediaChanging() {
-        return isMediaChanging;
-    }
-
-    void setMediaChanging(boolean mediaChanging) {
-        isMediaChanging = mediaChanging;
-    }
-
     private void setAudioMetadata() {
         MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
@@ -152,18 +143,17 @@ public class AudioServiceBinder
 
             Log.d("startAudio", "set update playback state");
 
+            Message updateAudioProgressMsg = new Message();
+
+            updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_START_PLAYING;
+
+            // Send the message to caller activity's update audio Handler object.
+            audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
+
             audioPlayer.prepareAsync();
 
         }
         service = this;
-    }
-
-    void seekAudio(int position) {
-
-        if (isPlayerReady) {
-
-            audioPlayer.seekTo(position * 1000);
-        }
     }
 
     void pauseAudio() {
@@ -219,7 +209,7 @@ public class AudioServiceBinder
         }
     }
 
-    void makeRadioPlayerReady() {
+    void setupAudioPlayer() {
         try {
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
@@ -295,25 +285,12 @@ public class AudioServiceBinder
         } catch (Exception e) { /* ignore */ }
     }
 
-    int getCurrentAudioPosition() {
-        int ret = 0;
-
-        if (audioPlayer != null) {
-
-            ret = audioPlayer.getCurrentPosition();
-        }
-
-        return ret;
-    }
-
     @Override
     public void onPrepared(MediaPlayer mp) {
 
         isPlayerReady = true;
 
         isBound = true;
-
-        setMediaChanging(false);
 
         audioPlayer.start();
 
@@ -338,7 +315,7 @@ public class AudioServiceBinder
         // Create update audio player state message.
         Message updateAudioProgressMsg = new Message();
 
-        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAY;
+        updateAudioProgressMsg.what = UPDATE_PLAYER_STATE_TO_PLAYING;
 
         // Send the message to caller activity's update audio Handler object.
         audioProgressUpdateHandler.sendMessage(updateAudioProgressMsg);
