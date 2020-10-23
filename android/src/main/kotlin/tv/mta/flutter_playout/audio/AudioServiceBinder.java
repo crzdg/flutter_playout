@@ -473,6 +473,8 @@ public class AudioServiceBinder
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
         }
 
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Your Long Text here"))
+
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
