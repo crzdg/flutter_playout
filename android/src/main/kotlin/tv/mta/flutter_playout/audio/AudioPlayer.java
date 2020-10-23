@@ -238,7 +238,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
             audioServiceBinder.pauseAudio();
         }
-        
+
     }
 
     private void reset() {
@@ -322,7 +322,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 break;
             }
             case "init": {
-                //seekTo(call.arguments);
                 bindAudioService();
                 result.success(true);
                 break;
@@ -333,7 +332,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 break;
             }
             case "setup": {
-                //setMedia(call.arguments);
                 setupRadioPlayer(call.arguments);
                 result.success(true);
                 break;
@@ -401,7 +399,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                 }
 
-                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PAUSING) {
 
                     service.notifyDart("onPausing");
 
