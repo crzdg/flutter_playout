@@ -280,8 +280,6 @@ public class AudioServiceBinder
 
         updatePlayerState(PlayerState.PREPARED);
 
-        audioPlayer.start();
-
         ComponentName receiver = new ComponentName(context.getPackageName(),
                 RemoteReceiver.class.getName());
 
@@ -297,6 +295,8 @@ public class AudioServiceBinder
         mMediaSessionCompat.setActive(true);
 
         setAudioMetadata();
+
+        audioPlayer.start();
 
         updatePlayerState(PlayerState.STARTED);
 
