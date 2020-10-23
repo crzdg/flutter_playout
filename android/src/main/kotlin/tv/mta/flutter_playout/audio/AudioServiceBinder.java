@@ -154,6 +154,8 @@ public class AudioServiceBinder
 
     void pauseAudio() {
 
+        Log.d("ANDROID", "pauseAudio");
+
         if (audioPlayer != null) {
 
             if (audioPlayer.isPlaying()) {
@@ -249,7 +251,7 @@ public class AudioServiceBinder
 
     @Override
     public void onDestroy() {
-
+        Log.d("ANDROID", "onDestroy");
         try {
 
             cleanPlayerNotification();
@@ -315,7 +317,7 @@ public class AudioServiceBinder
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-
+        Log.d("ANDROID", "on error");
         updatePlayerState(PlayerState.ERROR);
 
         // Create update audio player state message.
