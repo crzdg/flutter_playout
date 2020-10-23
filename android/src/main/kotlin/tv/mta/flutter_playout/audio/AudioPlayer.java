@@ -218,7 +218,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         if (audioServiceBinder.getPlayerState() == PlayerState.STARTED) {
             audioServiceBinder.updateRadioInformations(this.title, this.subtitle);
         }
-            
+
         notifyDart("onChangeMediaInfo");
     }
 

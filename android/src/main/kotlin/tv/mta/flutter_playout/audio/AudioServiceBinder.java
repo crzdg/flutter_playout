@@ -291,10 +291,10 @@ public class AudioServiceBinder
         mMediaSessionCompat.setCallback(new MediaSessionCallback(audioPlayer));
 
         mMediaSessionCompat.setActive(true);
+        
+        audioPlayer.start();
 
         setAudioMetadata();
-
-        audioPlayer.start();
 
         updatePlayerState(PlayerState.STARTED);
 
