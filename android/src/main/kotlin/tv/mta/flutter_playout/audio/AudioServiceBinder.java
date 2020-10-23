@@ -463,6 +463,8 @@ public class AudioServiceBinder
         NotificationCompat.Builder notificationBuilder = PlayerNotificationUtil.from(
                 activity, context, mMediaSessionCompat, mNotificationChannelId);
 
+        notificationBuilder.setPriority(Notification.PRIORITY_MAX).setWhen(0);
+
         if ((capabilities & PlaybackStateCompat.ACTION_PAUSE) != 0) {
             notificationBuilder.addAction(R.drawable.ic_pause, "Pause",
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PAUSE));
@@ -473,7 +475,7 @@ public class AudioServiceBinder
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PLAY));
         }
 
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Your Long Text here"));
+
 
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
