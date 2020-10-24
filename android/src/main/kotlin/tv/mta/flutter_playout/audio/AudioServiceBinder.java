@@ -124,12 +124,13 @@ public class AudioServiceBinder
     }
 
     private void setAudioMetadata() {
-        MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
-                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, subtitle)
-                .build();
-
-        mMediaSessionCompat.setMetadata(metadata);
+        if (mMediaSessionCompat != null) {
+            MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
+                    .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
+                    .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, subtitle)
+                    .build();
+            mMediaSessionCompat.setMetadata(metadata);
+        }
     }
 
     private void updateAudioProgressUpdateHandler(int what){
