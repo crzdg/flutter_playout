@@ -239,7 +239,7 @@ public class AudioServiceBinder
     @Override
     public void onDestroy() {
         Log.d("ANDROID", "onDestroy");
-        disposeAudio();
+        //disposeAudio();
     }
 
     @Override

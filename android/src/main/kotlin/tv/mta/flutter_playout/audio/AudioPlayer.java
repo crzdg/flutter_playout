@@ -158,39 +158,27 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     }
 
     private void doBindMediaNotificationManagerService() {
-
         Intent service = new Intent(this.context,
                 MediaNotificationManagerService.class);
-
         this.context.bindService(service, mMediaNotificationManagerServiceConnection,
                 Context.BIND_AUTO_CREATE);
-
         mIsBoundMediaNotificationManagerService = true;
-
         this.context.startService(service);
     }
 
     private void doUnbindMediaNotificationManagerService() {
-
         if (mIsBoundMediaNotificationManagerService) {
-
             this.context.unbindService(mMediaNotificationManagerServiceConnection);
-
             mIsBoundMediaNotificationManagerService = false;
         }
     }
 
     private void notifyDart(String notification) {
         try {
-
             JSONObject message = new JSONObject();
-
             message.put("name", "{}".format(notification));
-
             eventSink.success(message);
-
         } catch (Exception e) {
-
             Log.e(TAG, "notify_{}: ".format(notification), e);
         }
     }
@@ -276,13 +264,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
      * background service's AudioServiceBinder instance to invoke related methods.
      */
     private void bindAudioService() {
-
         Log.d("bindAudioService", "bindAudioService");
-
         if (audioServiceBinder == null) {
-
             Intent intent = new Intent(this.context, AudioService.class);
-
             this.context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
     }
@@ -293,13 +277,11 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             this.context.unbindService(serviceConnection);
-            //reset();
         }
     }
 
     @Override
     public void onMethodCall(MethodCall call, @NotNull MethodChannel.Result result) {
-
         switch (call.method) {
             case "play": {
                 play();
@@ -344,56 +326,32 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     /* handles messages coming back from AudioServiceBinder */
     static class IncomingMessageHandler extends Handler {
-
         private final WeakReference<AudioPlayer> mService;
-
         IncomingMessageHandler(AudioPlayer service) {
             mService = new WeakReference<>(service);
         }
-
         @Override
         public void handleMessage(Message msg) {
-
             AudioPlayer service = mService.get();
-
             if (service != null && service.audioServiceBinder != null) {
-
                 if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_INITIALIZED) {
-
                     service.notifyDart("onInit");
-
                 }
-
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_READY) {
-
                     service.notifyDart("onReady");
-
                 }
-
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_START_PLAYING) {
-
                     service.notifyDart("onStartPlaying");
-
                 }
-
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
-
                     service.notifyDart("onPlaying");
-
                 }
-
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PAUSING) {
-
                     service.notifyDart("onPausing");
-
                 }
-
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_COMPLETE) {
-
                     service.notifyDart("onComplete");
-
                 }
-
             }
         }
     }
