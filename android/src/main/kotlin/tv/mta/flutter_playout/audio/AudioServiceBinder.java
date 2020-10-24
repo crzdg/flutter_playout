@@ -219,9 +219,8 @@ public class AudioServiceBinder
         }
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d("ANDROID", "onDestroy");
+    public void disposeAudio() {
+        Log.d("ANDROID", "disposeAudio");
         try {
             cleanPlayerNotification();
             if (audioPlayer != null) {
@@ -235,6 +234,12 @@ public class AudioServiceBinder
                 mMediaSessionCompat = null;
             }
         } catch (Exception e) { /* ignore */ }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("ANDROID", "onDestroy");
+        disposeAudio();
     }
 
     @Override

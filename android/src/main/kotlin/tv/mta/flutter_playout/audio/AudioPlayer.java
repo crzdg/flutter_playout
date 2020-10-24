@@ -243,10 +243,11 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     }
 
     private void dispose() {
-        if (audioServiceBinder != null) {
-            audioServiceBinder.pauseAudio();
-            notifyDart("onReset");
-        }
+        try {
+            audioServiceBinder.disposeAudio();
+            unBoundAudioService();
+            doUnbindMediaNotificationManagerService();
+        } catch (Exception e) { /* ignore */ }
     }
 
 
@@ -321,7 +322,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                 break;
             }
             case "dispose": {
-                onDestroy();
+                dispose();
                 result.success(true);
                 break;
             }
@@ -340,19 +341,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-    private void onDestroy() {
-
-        try {
-
-            unBoundAudioService();
-
-            doUnbindMediaNotificationManagerService();
-
-            /* reset media duration */
-            mediaDuration = 0;
-
-        } catch (Exception e) { /* ignore */ }
-    }
 
     /* handles messages coming back from AudioServiceBinder */
     static class IncomingMessageHandler extends Handler {
