@@ -224,35 +224,31 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
 
     private void play() {
-
         if (audioServiceBinder != null) {
-
             audioServiceBinder.startAudio();
-
         }
-
     }
 
     private void pause() {
-
         if (audioServiceBinder != null) {
-
             audioServiceBinder.pauseAudio();
         }
-
     }
 
     private void reset() {
-
         if (audioServiceBinder != null) {
-
             audioServiceBinder.pauseAudio();
-
-            audioServiceBinder.cleanPlayerNotification();
-
-            audioServiceBinder = null;
+            notifyDart("onReset");
         }
     }
+
+    private void dispose() {
+        if (audioServiceBinder != null) {
+            audioServiceBinder.pauseAudio();
+            notifyDart("onReset");
+        }
+    }
+
 
     private void notifyDartOnError(String errorMessage) {
 
@@ -294,12 +290,9 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
      * Unbound background audio service with caller activity.
      */
     private void unBoundAudioService() {
-
         if (audioServiceBinder != null) {
-
             this.context.unbindService(serviceConnection);
-
-            reset();
+            //reset();
         }
     }
 
@@ -407,7 +400,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
                 }
 
-                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_PLAYING) {
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_COMPLETE) {
 
                     service.notifyDart("onComplete");
 

@@ -212,7 +212,6 @@ public class AudioServiceBinder
 
             else {
                 updatePlayerState(PlayerState.ERROR);
-                //audioPlayer.start();
             }
 
         } catch (Exception ex) {
@@ -232,6 +231,8 @@ public class AudioServiceBinder
                 audioPlayer.reset();
                 audioPlayer.release();
                 audioPlayer = null;
+                mMediaSessionCompat.setActive(false);
+                mMediaSessionCompat = null;
             }
         } catch (Exception e) { /* ignore */ }
     }

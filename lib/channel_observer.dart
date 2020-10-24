@@ -23,8 +23,6 @@ mixin ChannelObserver {
 
   void onReset() {/* user implementation */}
 
-  void onDispose() {/* user implementation */}
-
   void onComplete() {/* user implementation */}
 
   void onError(String error) {/* user implementation */}
@@ -73,9 +71,6 @@ mixin ChannelObserver {
         break;
       case "onChangeMediaInfo":
         onChangeMediaInfo();
-        break;
-      case "onDispose":
-        onDispose();
         break;
       case "onError":
         onError(event["error"]);

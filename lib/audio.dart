@@ -124,4 +124,7 @@ class Audio with ChannelObserver {
   }
 
 
+  @override
+  void onChangeMediaInfo () { return; }
+
 }
