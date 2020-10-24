@@ -305,7 +305,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             }
             case "dispose": {
                 dispose();
-                result.success(true);<
+                result.success(true);
                 break;
             }
             case "setup": {
