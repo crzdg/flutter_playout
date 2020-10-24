@@ -232,6 +232,7 @@ public class AudioServiceBinder
                 audioPlayer = null;
                 mMediaSessionCompat.setActive(false);
                 mMediaSessionCompat = null;
+                updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_COMPLETE);
             }
         } catch (Exception e) { /* ignore */ }
     }
