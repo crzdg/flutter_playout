@@ -212,7 +212,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             //audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
-            audioServiceBinder = null;
+            //audioServiceBinder = null;
         } catch (Exception e) { /* ignore */ }
     }
 
