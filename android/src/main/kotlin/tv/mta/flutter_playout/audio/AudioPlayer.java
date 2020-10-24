@@ -68,51 +68,35 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private ServiceConnection mMediaNotificationManagerServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-
             mMediaNotificationManagerService =
                     ((MediaNotificationManagerService.MediaNotificationManagerServiceBinder) service)
                     .getService();
-
             mMediaNotificationManagerService.setActivePlayer(audioServiceBinder);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
             mMediaNotificationManagerService = null;
         }
     };
     /* This service connection object is the bridge between activity and background service. */
     private ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.d("ServiceConnection", "onServiceConnected");
             /* Cast and assign background service's onBind method returned iBinder object */
             audioServiceBinder = (AudioServiceBinder) iBinder;
-
             audioServiceBinder.setActivity(activity);
-
             audioServiceBinder.setContext(context);
-
             audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-
             //audioServiceBinder.setAudioFileUrl(audioURL);
-
             //audioServiceBinder.setTitle(title);
-
             //audioServiceBinder.setSubtitle(subtitle);
-
             //audioServiceBinder.pauseAudio();
-
             //audioServiceBinder.startAudio(startPositionInMills);
-
             doBindMediaNotificationManagerService();
-
             initRadioPlayer();
-
         }
-
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             Log.d("ServiceConnection", "onServiceDisconnected");
@@ -120,24 +104,17 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     };
 
     private AudioPlayer(BinaryMessenger messenger, Context context) {
-
         this.context = context;
-
         this.audioProgressUpdateHandler = new IncomingMessageHandler(this);
-
         new MethodChannel(messenger, "tv.mta/NativeAudioChannel")
                 .setMethodCallHandler(this);
-
         new EventChannel(messenger, "tv.mta/NativeAudioEventChannel", JSONMethodCodec.INSTANCE)
                 .setStreamHandler(this);
     }
 
     public static void registerWith(PluginRegistry.Registrar registrar) {
-
         final AudioPlayer plugin = new AudioPlayer(registrar.messenger(), registrar.activeContext());
-
         plugin.activity = registrar.activity();
-
         registrar.addViewDestroyListener(new PluginRegistry.ViewDestroyListener() {
             @Override
             public boolean onViewDestroy(FlutterNativeView view) {
@@ -232,7 +209,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void dispose() {
         try {
-            audioServiceBinder.disposeAudio();
+            //audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
             audioServiceBinder = null;
@@ -241,24 +218,15 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
 
     private void notifyDartOnError(String errorMessage) {
-
         try {
-
             JSONObject message = new JSONObject();
-
             message.put("name", "onError");
-
             message.put("error", errorMessage);
-
             eventSink.success(message);
-
         } catch (Exception e) {
-
             Log.e(TAG, "notifyDartOnError: ", e);
         }
     }
-
-
 
     /**
      * Bind background service with caller activity. Then this activity can use
