@@ -232,7 +232,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void dispose() {
         try {
-            audioServiceBinder.disposeAudio();
+            //audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
         } catch (Exception e) { /* ignore */ }
