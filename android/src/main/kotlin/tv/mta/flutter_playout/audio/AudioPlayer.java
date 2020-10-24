@@ -277,6 +277,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             this.context.unbindService(serviceConnection);
+            audioServiceBinder = null;
         }
     }
 
