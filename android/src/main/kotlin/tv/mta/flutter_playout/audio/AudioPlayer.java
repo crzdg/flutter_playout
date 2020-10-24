@@ -232,9 +232,10 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void dispose() {
         try {
-            //audioServiceBinder.disposeAudio();
+            audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
+            audioServiceBinder = null;
         } catch (Exception e) { /* ignore */ }
     }
 
@@ -277,7 +278,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private void unBoundAudioService() {
         if (audioServiceBinder != null) {
             this.context.unbindService(serviceConnection);
-            audioServiceBinder = null;
         }
     }
 
