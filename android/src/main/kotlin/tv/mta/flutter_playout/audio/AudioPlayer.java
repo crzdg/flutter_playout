@@ -232,6 +232,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void dispose() {
         try {
+            notifyDart("onDispose");
             audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
@@ -305,7 +306,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             }
             case "dispose": {
                 dispose();
-                result.success(true);
+                result.success(true);<
                 break;
             }
             case "setup": {
