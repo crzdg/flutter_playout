@@ -141,7 +141,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         registrar.addViewDestroyListener(new PluginRegistry.ViewDestroyListener() {
             @Override
             public boolean onViewDestroy(FlutterNativeView view) {
-                plugin.onDestroy();
+                plugin.dispose();
                 return false;
             }
         });
