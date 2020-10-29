@@ -19,32 +19,65 @@ import MediaPlayer
 
 class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     static func register(with registrar: FlutterPluginRegistrar) {
-        
         let player = AudioPlayer()
-        
         let audioSession = AVAudioSession.sharedInstance()
-        
         do {
             try audioSession.setCategory(AVAudioSession.Category.playback)
         } catch _ { }
-        
         let channel = FlutterMethodChannel(name: "tv.mta/NativeAudioChannel", binaryMessenger: registrar.messenger())
-        
         registrar.addMethodCallDelegate(player, channel: channel)
-        
         setupEventChannel(messenger: registrar.messenger(), instance: player)
     }
-    
+
     private static func setupEventChannel(messenger:FlutterBinaryMessenger, instance:AudioPlayer) {
-        
         /* register for Flutter event channel */
         instance.eventChannel = FlutterEventChannel(name: "tv.mta/NativeAudioEventChannel", binaryMessenger: messenger, codec: FlutterJSONMethodCodec.sharedInstance())
-        
         instance.eventChannel!.setStreamHandler(instance)
     }
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
+        if let arguments = call.arguments as? NSDictionary {
+            if ("init" == call.method) {
+                init()
+                result(true)
+            }
+            else if ("setup" == call.method) {
+                setup(arguments)
+                result(true)
+            }
+            else if ("play" == call.method) {
+                play()
+                result(true)
+            }
+            else if ("stop" == call.method) {
+                stop()
+                result(true)
+            }
+            else if ("changeMediaInfo" == call.method) {
+                changeMediaInfo(arguments)
+                result(true)
+            }
+            else if ("reset" == call.method) {
+                reset()
+                result(true)
+            }
+            else if ("dispose" == call.method) {
+                dispose()
+                result(true)
+            }
+
+            else { result(FlutterMethodNotImplemented) }
+
+        }
+
+
+
+
+    }
+
+
+    public func _handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+      // if let arguments = call.arguments as? NSDictionary {
       /* start audio playback */
       if ("play" == call.method) {
           
@@ -147,19 +180,12 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             
                 /* Create the asset to play */
                 let asset = AVAsset(url: url)
-                
                 if (asset.isPlayable) {
-                    
                     validPlaybackUrl = true
-                
                     if (audioURL != mediaURL) {
-                        
                         mediaURL = audioURL
-                        
                         audioPlayer = AVPlayer(url: url)
-                        
                         let center = NotificationCenter.default
-                        
                         center.addObserver(self, selector: #selector(onComplete(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.audioPlayer.currentItem)
                         center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)), name: .AVPlayerItemNewErrorLogEntry, object: audioPlayer.currentItem)
                         center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: audioPlayer.currentItem)
