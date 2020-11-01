@@ -112,8 +112,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 result(true)
             }
             else if ("setup" == call.method) {
-                setup(arguments: arguments)
-                result(true)
+                if let arguments = call.arguments as? NSDictionary{
+                    setup(arguments: arguments)
+                    result(true)
+                }
             }
             else if ("play" == call.method) {
                 play()
@@ -124,8 +126,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 result(true)
             }
             else if ("changeMediaInfo" == call.method) {
-                changeMediaInfo(arguments: arguments)
-                result(true)
+                if let arguments = call.arguments as? NSDictionary {
+                    changeMediaInfo(arguments: arguments)
+                    result(true)
+                }
             }
             else if ("reset" == call.method) {
                 reset()
