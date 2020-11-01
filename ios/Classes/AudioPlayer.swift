@@ -43,6 +43,18 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         self.flutterEventSink?(["name":"onInit"])
     }
 
+    private func play() {
+        audioPlayer.play()
+        self.flutterEventSink?(["name":"onPlay"])
+        updateInfoPanelOnPlay()
+    }
+
+    private func pause() {
+        audioPlayer.pause()
+        self.flutterEventSink?(["name":"onPause"])
+        updateInfoPanelOnPause()
+    }
+
     private func setup(arguments: NSDictionary) {
         if let arguments = call.arguments as? NSDictionary {
               if let audioURL = arguments["url"] as? String {
@@ -54,7 +66,31 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func _setup(title: String, subtitle: String, url: String) {
+        let asset = AVAsset(url: url)
+            if (asset.isPlayable) {
+                    audioPlayer = AVPlayer(url: url)
+                    let center = NotificationCenter.default
+                    center.addObserver(self, selector: #selector(onComplete(_:)),
+                                        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                        object: self.audioPlayer.currentItem)
+                    center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)),
+                                        name: .AVPlayerItemNewErrorLogEntry,
+                                        object: audioPlayer.currentItem)
+                    center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)),
+                                        name: .AVPlayerItemFailedToPlayToEndTime,
+                                        object: audioPlayer.currentItem)
 
+                    /* Add observer for AVPlayer status and AVPlayerItem status */
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
+                                                    options: [.new, .initial], context: nil)
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status),
+                                                    options:[.old, .new, .initial], context: nil)
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
+                                                    options:[.old, .new, .initial], context: nil)
+                    setupRemoteTransportControls()
+                    setupNowPlayingInfoPanel(title: title, subtitle: subtitle)
+                }
+        self.flutterEventSink?(["name":"onSetup"])
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -157,46 +193,38 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var mediaURL = ""
 
     private func setup_old(title:String, subtitle:String, position:Double, url: String?, isLiveStream:Bool) {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
-            try audioSession.setActive(true)
-        } catch _ { }
+        //do {
+        //    let audioSession = AVAudioSession.sharedInstance()
+        //    try audioSession.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
+        //    try audioSession.setActive(true)
+        //} catch _ { }
         //audioPlayer.pause()
-        var validPlaybackUrl = false
-        if let audioURL = url {
-            if let url = URL(string: audioURL) {
-                /* Create the asset to play */
-                let asset = AVAsset(url: url)
-                if (asset.isPlayable) {
-                    validPlaybackUrl = true
-                    if (audioURL != mediaURL) {
-                        mediaURL = audioURL
-                        audioPlayer = AVPlayer(url: url)
-                        let center = NotificationCenter.default
-                        center.addObserver(self, selector: #selector(onComplete(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.audioPlayer.currentItem)
-                        center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)), name: .AVPlayerItemNewErrorLogEntry, object: audioPlayer.currentItem)
-                        center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: audioPlayer.currentItem)
-                        /* Add observer for AVPlayer status and AVPlayerItem status */
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options:[.old, .new, .initial], context: nil)
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.old, .new, .initial], context: nil)
-                        let interval = CMTime(seconds: 1.0,
-                        preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-                        timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) {
-                            time in self.onTimeInterval(time: time)
-                        }
-                        setupRemoteTransportControls()
-                        setupNowPlayingInfoPanel(title: title, subtitle: subtitle, isLiveStream: isLiveStream)
-                        seekTo(seconds: position / 1000)
+        if let url = URL(string: audioURL) {
+            /* Create the asset to play */
+            let asset = AVAsset(url: url)
+            if (asset.isPlayable) {
+                validPlaybackUrl = true
+                if (audioURL != mediaURL) {
+                    mediaURL = audioURL
+                    audioPlayer = AVPlayer(url: url)
+                    let center = NotificationCenter.default
+                    center.addObserver(self, selector: #selector(onComplete(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.audioPlayer.currentItem)
+                    center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)), name: .AVPlayerItemNewErrorLogEntry, object: audioPlayer.currentItem)
+                    center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: audioPlayer.currentItem)
+                    /* Add observer for AVPlayer status and AVPlayerItem status */
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options:[.old, .new, .initial], context: nil)
+                    self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.old, .new, .initial], context: nil)
+                    let interval = CMTime(seconds: 1.0,
+                    preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+                    timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) {
+                        time in self.onTimeInterval(time: time)
                     }
-                    audioPlayer.play()
+                    setupRemoteTransportControls()
+                    setupNowPlayingInfoPanel(title: title, subtitle: subtitle, isLiveStream: isLiveStream)
+                    //seekTo(seconds: position / 1000)
                 }
             }
-        }
-
-        if (!validPlaybackUrl) {
-            pause()
         }
     }
 
@@ -290,30 +318,16 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         }
     }
 
-    private func setupNowPlayingInfoPanel(title:String, subtitle:String, isLiveStream:Bool) {
+    private func setupNowPlayingInfoPanel(title:String, subtitle:String) {
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
         if #available(iOS 10.0, *) {
-            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLiveStream
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
         }
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime().seconds
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.currentItem?.asset.duration.seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0 // will be set to 1 by onTime callback
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-    }
-
-    private func play() {
-        audioPlayer.play()
-        self.flutterEventSink?(["name":"onPlay"])
-        updateInfoPanelOnPlay()
-        onDurationChange()
-    }
-
-    private func pause() {
-        audioPlayer.pause()
-        self.flutterEventSink?(["name":"onPause"])
-        updateInfoPanelOnPause()
-        onDurationChange()
     }
 
     private func seekTo(seconds:Double) {
