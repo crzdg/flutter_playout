@@ -39,8 +39,8 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
             try audioSession.setActive(true)
+            self.flutterEventSink?(["name":"onInit"])
         } catch _ { }
-        self.flutterEventSink?(["name":"onInit"])
     }
 
     private func changeMediaInfo(arguments: NSDictionary) {
@@ -68,8 +68,8 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if let title = arguments["title"] as? String {
                 if let subtitle = arguments["subtitle"] as? String {
                         _setup(title: title, subtitle: subtitle, url: audioURL)
+                        self.flutterEventSink?(["name":"onSetup"])
                     }}}
-        self.flutterEventSink?(["name":"onSetup"])
     }
 
     private func _setup(title: String, subtitle: String, url: String) {
