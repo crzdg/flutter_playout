@@ -141,7 +141,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     public func _handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       // if let arguments = call.arguments as? NSDictionary {
-      /* start audio playback */
+      /* start audio playback
       if ("play" == call.method) {
           if let arguments = call.arguments as? NSDictionary {
               if let audioURL = arguments["url"] as? String {
@@ -158,6 +158,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
           }
           result(true)
       }
+      */
 
       /* pause audio playback */
       else if ("pause" == call.method) {
