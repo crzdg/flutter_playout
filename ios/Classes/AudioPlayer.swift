@@ -56,12 +56,11 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func setup(arguments: NSDictionary) {
-        if let arguments = call.arguments as? NSDictionary {
-              if let audioURL = arguments["url"] as? String {
-                  if let title = arguments["title"] as? String {
-                      if let subtitle = arguments["subtitle"] as? String {
-                                _setup(title: title, subtitle: subtitle, url: audioURL)
-                            }}}}
+        if let audioURL = arguments["url"] as? String {
+            if let title = arguments["title"] as? String {
+                if let subtitle = arguments["subtitle"] as? String {
+                        _setup(title: title, subtitle: subtitle, url: audioURL)
+                    }}}
         self.flutterEventSink?(["name":"onSetup"])
     }
 
