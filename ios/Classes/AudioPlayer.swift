@@ -30,7 +30,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private static func setupEventChannel(messenger:FlutterBinaryMessenger, instance:AudioPlayer) {
         /* register for Flutter event channel */
-        instance.eventChannel = FlutterEventChannel(name: "tv.mta/NativeAudioEventChannel", binaryMessenger: messenger, codec: FlutterJSONMethodCodec.sharedInstance())
+        instance.eventChannel = FlutterEventChannel(name: "tv.mta/NativeAudioEventChannel",
+                                                    binaryMessenger: messenger,
+                                                    codec: FlutterJSONMethodCodec.sharedInstance())
         instance.eventChannel!.setStreamHandler(instance)
     }
 
@@ -106,6 +108,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         if let arguments = call.arguments as? NSDictionary {
             if ("init" == call.method) {
                 initPlayer()
+                self.flutterEventSink?(["name":"onInit"])
                 result(true)
             }
             else if ("setup" == call.method) {
