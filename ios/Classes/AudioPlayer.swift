@@ -109,7 +109,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 result(true)
             }
             else if ("setup" == call.method) {
-                setup(arguments)
+                setup(arguments: arguments)
                 result(true)
             }
             else if ("play" == call.method) {
@@ -121,7 +121,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 result(true)
             }
             else if ("changeMediaInfo" == call.method) {
-                changeMediaInfo(arguments)
+                changeMediaInfo(arguments: arguments)
                 result(true)
             }
             else if ("reset" == call.method) {
@@ -134,7 +134,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
 
             else { result(FlutterMethodNotImplemented) }
-
         }
     }
 
@@ -161,7 +160,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
       */
 
       /* pause audio playback */
-      else if ("pause" == call.method) {
+      if ("pause" == call.method) {
           pause()
           result(true)
       }
