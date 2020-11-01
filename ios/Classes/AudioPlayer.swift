@@ -149,7 +149,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                       if let subtitle = arguments["subtitle"] as? String {
                           if let position = arguments["position"] as? Double {
                             if let isLiveStream = arguments["isLiveStream"] as? Bool {
-                                setup(title: title, subtitle: subtitle, position: position, url: audioURL)
+                                //setup(title: title, subtitle: subtitle, position: position, url: audioURL)
                             }
                           }
                       }
@@ -323,7 +323,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         // Add handler for Pause Command
         commandCenter.pauseCommand.addTarget { event in
             if self.audioPlayer.rate == 1.0 {
-                self.pause()
+                self.stop()
                 return .success
             }
             return .commandFailed
