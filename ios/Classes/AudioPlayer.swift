@@ -34,7 +34,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         instance.eventChannel!.setStreamHandler(instance)
     }
 
-    private func init() {
+    private func initPlayer() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
@@ -96,7 +96,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let arguments = call.arguments as? NSDictionary {
             if ("init" == call.method) {
-                init()
+                initPlayer()
                 result(true)
             }
             else if ("setup" == call.method) {
