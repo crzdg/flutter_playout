@@ -286,7 +286,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if newStatus == .failed {
                 self.flutterEventSink?(["name":"onError", "error":(String(describing: self.audioPlayer.currentItem?.error))])
             } else if newStatus == .readyToPlay {
-                self.flutterEventSink?(["name":"onPlaying"])
+                self.flutterEventSink?(["name":"onPlaying_statusplayeritem"])
             }
         }
 
@@ -301,7 +301,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self.flutterEventSink?(["name":"onPause"])
                     break
                 case AVPlayerTimeControlStatus.playing:
-                    self.flutterEventSink?(["name":"onPlaying"])
+                    self.flutterEventSink?(["name":"onPlaying_timecontrolstatus"])
                     break
                 case .waitingToPlayAtSpecifiedRate: break
                 @unknown default:
