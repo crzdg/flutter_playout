@@ -85,7 +85,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     }}}}
     }
 
-    private func _play(title: String, subtitle: String, url: String) {
+    private func _play() {
         if let _url = URL(string: self.url) {
             let asset = AVAsset(url: _url)
                 if (asset.isPlayable) {
