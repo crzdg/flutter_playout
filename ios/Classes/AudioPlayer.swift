@@ -278,7 +278,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if newStatus == .failed {
                 self.flutterEventSink?(["name":"onError", "error":(String(describing: self.audioPlayer.currentItem?.error))])
             } else if newStatus == .readyToPlay {
-                self.flutterEventSink?(["name":"onReady"])
+                self.flutterEventSink?(["name":"onPlaying"])
             }
         }
 
