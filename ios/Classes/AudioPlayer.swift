@@ -53,13 +53,14 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func play() {
         self._play()
         audioPlayer.play()
-        self.flutterEventSink?(["name":"onPlaying"])
+        self.flutterEventSink?(["name":"onStartPlaying"])
         updateInfoPanelOnPlay()
     }
 
     private func pause() {
         audioPlayer.pause()
         self.flutterEventSink?(["name":"onPausing"])
+        self._setup()
         updateInfoPanelOnPause()
     }
 
@@ -67,22 +68,31 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         return;
     }
 
+    private func _setup(){
+        if let _url = URL(string: self.url) {
+            let asset = AVAsset(url: _url)
+        if (asset.isPlayable) {
+            self.title = title
+            self.subtitle = subtitle
+            self.url = url
+            self.flutterEventSink?(["name":"onReady"])
+        }
+        else {
+            // TODO
+        }
+    }
+
     private func setup(arguments: NSDictionary) {
         if let url = arguments["url"] as? String {
             if let title = arguments["title"] as? String {
                 if let subtitle = arguments["subtitle"] as? String {
-                    if let _url = URL(string: url) {
-                        let asset = AVAsset(url: _url)
-                        if (asset.isPlayable) {
-                            self.title = title
-                            self.subtitle = subtitle
-                            self.url = url
-                            self.flutterEventSink?(["name":"onReady"])
-                        }
-                        else {
-                            // TODO
-                        }
-                    }}}}
+                    self.title = title
+                    self.subtitle = subtitle
+                    self.url = url
+                    self._setup()
+                    }
+                }
+            }
     }
 
     private func _play() {
@@ -293,7 +303,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self.flutterEventSink?(["name":"onPause"])
                     break
                 case AVPlayerTimeControlStatus.playing:
-                    self.flutterEventSink?(["name":"onPlay"])
+                    self.flutterEventSink?(["name":"onStartPlaying"])
                     break
                 case .waitingToPlayAtSpecifiedRate: break
                 @unknown default:
