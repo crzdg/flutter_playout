@@ -72,9 +72,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         if let _url = URL(string: self.url) {
             let asset = AVAsset(url: _url)
             if (asset.isPlayable) {
-                self.title = title
-                self.subtitle = subtitle
-                self.url = url
                 self.flutterEventSink?(["name":"onReady"])
             }
             else {
