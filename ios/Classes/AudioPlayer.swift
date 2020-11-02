@@ -51,14 +51,15 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func play() {
+        self._play()
         audioPlayer.play()
-        self.flutterEventSink?(["name":"onPlay"])
+        self.flutterEventSink?(["name":"onPlaying"])
         updateInfoPanelOnPlay()
     }
 
     private func stop() {
         audioPlayer.pause()
-        self.flutterEventSink?(["name":"onPause"])
+        self.flutterEventSink?(["name":"onPausing"])
         updateInfoPanelOnPause()
     }
 
@@ -70,13 +71,22 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         if let audioURL = arguments["url"] as? String {
             if let title = arguments["title"] as? String {
                 if let subtitle = arguments["subtitle"] as? String {
-                        _setup(title: title, subtitle: subtitle, url: audioURL)
-                        self.flutterEventSink?(["name":"onSetup"])
-                    }}}
+                    if let _url = URL(string: url) {
+                        let asset = AVAsset(url: _url)
+                        if (asset.isPlayable) {
+                            self.title = title
+                            self.subtitle = subtitle
+                            self.url = url
+                            self.flutterEventSink?(["name":"onSetup"])
+                        }
+                        else {
+                            // TODO
+                        }
+                    }}}}
     }
 
-    private func _setup(title: String, subtitle: String, url: String) {
-        if let _url = URL(string: url) {
+    private func _play(title: String, subtitle: String, url: String) {
+        if let _url = URL(string: self.url) {
             let asset = AVAsset(url: _url)
                 if (asset.isPlayable) {
                         audioPlayer = AVPlayer(url: _url)
@@ -99,16 +109,15 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                         self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
                                                         options:[.old, .new, .initial], context: nil)
                         setupRemoteTransportControls()
-                        setupNowPlayingInfoPanel(title: title, subtitle: subtitle)
+                        setupNowPlayingInfoPanel(title: self.title, subtitle: self.subtitle)
                     }
+                    audioPlayer.play()
                 }
-        self.flutterEventSink?(["name":"onSetup"])
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if ("init" == call.method) {
             initPlayer()
-            self.flutterEventSink?(["name":"onInit"])
             result(true)
         }
         else if ("setup" == call.method) {
@@ -206,6 +215,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var nowPlayingInfo = [String : Any]()
     private var mediaDuration = 0.0
     private var mediaURL = ""
+    private var url:String = ""
+    private var title:String = ""
+    private var subtitle:String = ""
 
     private func setup_old(title:String, subtitle:String, position:Double, url: String?, isLiveStream:Bool) {
         /*
