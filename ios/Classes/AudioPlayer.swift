@@ -204,7 +204,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
       else if ("seekTo" == call.method) {
           if let arguments = call.arguments as? NSDictionary {
               if let seekToSecond = arguments["second"] as? Double {
-                  seekTo(seconds: seekToSecond)
+                  //seekTo(seconds: seekToSecond)
               }
           }
           result(true)
@@ -275,7 +275,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     @objc func onComplete(_ notification: Notification) {
         pause()
         self.flutterEventSink?(["name":"onComplete"])
-        seekTo(seconds: 0.0)
+        //seekTo(seconds: 0.0)
         updateInfoPanelOnComplete()
     }
 
@@ -381,7 +381,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func reset() {
         audioPlayer.pause()
-        seekTo(seconds: 0.0)
+        //seekTo(seconds: 0.0)
         /* reset state */
         self.mediaURL = ""
         onDurationChange()
