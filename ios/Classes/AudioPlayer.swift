@@ -301,7 +301,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self.flutterEventSink?(["name":"onPause"])
                     break
                 case AVPlayerTimeControlStatus.playing:
-                    self.flutterEventSink?(["name":"onStartPlaying"])
+                    self.flutterEventSink?(["name":"onPlaying"])
                     break
                 case .waitingToPlayAtSpecifiedRate: break
                 @unknown default:
