@@ -18,7 +18,7 @@ import MediaPlayer
 
 class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     static func register(with registrar: FlutterPluginRegistrar) {
-        NSLog("Register flutter!")
+        print("Register flutter!")
         let player = AudioPlayer()
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -286,7 +286,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if newStatus == .failed {
                 self.flutterEventSink?(["name":"onError", "error":(String(describing: self.audioPlayer.currentItem?.error))])
             } else if newStatus == .readyToPlay {
-                NSLog("playeritemstauts")
+                print("playeritemstauts")
                 self.flutterEventSink?(["name":"onPlaying"])
             }
         }
@@ -302,7 +302,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self.flutterEventSink?(["name":"onPause"])
                     break
                 case AVPlayerTimeControlStatus.playing:
-                    NSLog("timecontrolstatus")
+                    print("timecontrolstatus")
                     self.flutterEventSink?(["name":"onPlaying"])
                     break
                 case .waitingToPlayAtSpecifiedRate: break
