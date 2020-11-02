@@ -47,7 +47,13 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func changeMediaInfo(arguments: NSDictionary) {
-        return;
+        if let _title = arguments["title"] as? String {
+            if let _subtitle = arguments["subtitle"] as? String {
+                self.title = _title
+                self.subtitle = _subtitle
+                updateNowPlayingInfoPanel()
+                }
+            }
     }
 
     private func play() {
@@ -117,7 +123,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                         self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
                                                         options:[.old, .new, .initial], context: nil)
                         setupRemoteTransportControls()
-                        setupNowPlayingInfoPanel(title: self.title, subtitle: self.subtitle)
+                        setupNowPlayingInfoPanel()
                     }
                     audioPlayer.play()
                 }
@@ -356,9 +362,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         }
     }
 
-    private func setupNowPlayingInfoPanel(title:String, subtitle:String) {
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
+    private func setupNowPlayingInfoPanel() {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = self.subtitle
         if #available(iOS 10.0, *) {
             nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
         }
@@ -368,15 +374,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
 
-    private func seekTo(seconds:Double) {
-        updateInfoPanelOnPause()
-        let position = self.audioPlayer.currentTime().seconds
-        audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))) { (isCompleted) in
-            if (isCompleted) {
-                self.flutterEventSink?(["name":"onSeek", "position":position, "offset":seconds])
-            }
-            self.updateInfoPanelOnPlay()
-        }
+    private func updateNowPlayingInfoPanel() {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = self.subtitle
     }
 
     private func reset() {
