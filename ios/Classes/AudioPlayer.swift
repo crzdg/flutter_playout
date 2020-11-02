@@ -18,7 +18,7 @@ import MediaPlayer
 
 class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     static func register(with registrar: FlutterPluginRegistrar) {
-        NSLog(@"Register flutter!")
+        NSLog("Register flutter!")
         let player = AudioPlayer()
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -106,43 +106,41 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let arguments = call.arguments as? NSDictionary {
-            if ("init" == call.method) {
-                initPlayer()
-                self.flutterEventSink?(["name":"onInit"])
-                result(true)
-            }
-            else if ("setup" == call.method) {
-                if let arguments = call.arguments as? NSDictionary{
-                    setup(arguments: arguments)
-                    result(true)
-                }
-            }
-            else if ("play" == call.method) {
-                play()
-                result(true)
-            }
-            else if ("stop" == call.method) {
-                stop()
-                result(true)
-            }
-            else if ("changeMediaInfo" == call.method) {
-                if let arguments = call.arguments as? NSDictionary {
-                    changeMediaInfo(arguments: arguments)
-                    result(true)
-                }
-            }
-            else if ("reset" == call.method) {
-                reset()
-                result(true)
-            }
-            else if ("dispose" == call.method) {
-                dispose()
-                result(true)
-            }
-
-            else { result(FlutterMethodNotImplemented) }
+        if ("init" == call.method) {
+            initPlayer()
+            self.flutterEventSink?(["name":"onInit"])
+            result(true)
         }
+        else if ("setup" == call.method) {
+            if let arguments = call.arguments as? NSDictionary{
+                setup(arguments: arguments)
+                result(true)
+            }
+        }
+        else if ("play" == call.method) {
+            play()
+            result(true)
+        }
+        else if ("stop" == call.method) {
+            stop()
+            result(true)
+        }
+        else if ("changeMediaInfo" == call.method) {
+            if let arguments = call.arguments as? NSDictionary {
+                changeMediaInfo(arguments: arguments)
+                result(true)
+            }
+        }
+        else if ("reset" == call.method) {
+            reset()
+            result(true)
+        }
+        else if ("dispose" == call.method) {
+            dispose()
+            result(true)
+        }
+
+        else { result(FlutterMethodNotImplemented) }
     }
 
 
