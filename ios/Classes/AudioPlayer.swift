@@ -18,6 +18,7 @@ import MediaPlayer
 
 class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     static func register(with registrar: FlutterPluginRegistrar) {
+        NSLog(@"Register flutter!")
         let player = AudioPlayer()
         let audioSession = AVAudioSession.sharedInstance()
         do {
