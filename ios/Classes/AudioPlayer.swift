@@ -77,7 +77,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                             self.title = title
                             self.subtitle = subtitle
                             self.url = url
-                            self.flutterEventSink?(["name":"onSetup"])
+                            self.flutterEventSink?(["name":"onReady"])
                         }
                         else {
                             // TODO
