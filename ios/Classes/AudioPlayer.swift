@@ -341,7 +341,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         // Add handler for Pause Command
         commandCenter.pauseCommand.addTarget { event in
             if self.audioPlayer.rate == 1.0 {
-                self.stop()
+                self.pause()
                 return .success
             }
             return .commandFailed
