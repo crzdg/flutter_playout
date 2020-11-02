@@ -84,12 +84,12 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func setup(arguments: NSDictionary) {
-        if let url = arguments["url"] as? String {
-            if let title = arguments["title"] as? String {
-                if let subtitle = arguments["subtitle"] as? String {
-                    self.title = title
-                    self.subtitle = subtitle
-                    self.url = url
+        if let _url = arguments["url"] as? String {
+            if let _title = arguments["title"] as? String {
+                if let _subtitle = arguments["subtitle"] as? String {
+                    self.title = _title
+                    self.subtitle = _subtitle
+                    self.url = _url
                     self._setup()
                     }
                 }
