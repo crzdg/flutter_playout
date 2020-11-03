@@ -38,10 +38,12 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func initPlayer() {
+        print("init player ")
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
             try audioSession.setActive(true)
+            print("sink oninit")
             self.flutterEventSink?(["name":"onInit"])
         } catch _ { }
     }
