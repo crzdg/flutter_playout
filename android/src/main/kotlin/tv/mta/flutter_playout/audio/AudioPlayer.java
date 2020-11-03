@@ -89,7 +89,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            audioServiceBinder = null;
+            return;
         }
     };
 
@@ -302,6 +302,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                     service.notifyDart("onPausing");
                 }
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_COMPLETE) {
+                    service.audioServiceBinder = null;
                     service.notifyDart("onComplete");
                 }
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_ERROR) {
