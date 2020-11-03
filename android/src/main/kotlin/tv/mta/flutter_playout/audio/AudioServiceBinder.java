@@ -177,7 +177,7 @@ public class AudioServiceBinder
         setTitle(title);
         setSubtitle(subtitle);
         setAudioMetadata();
-        updatePlayerState(this.playerState);
+        //updatePlayerState(this.playerState);
     }
 
     void setupAudioPlayer(String url, String title, String subtitle) {
@@ -237,7 +237,6 @@ public class AudioServiceBinder
 
     @Override
     public void onDestroy() {
-        Log.d("ANDROID", "onDestroy");
         disposeAudio();
     }
 
@@ -266,9 +265,8 @@ public class AudioServiceBinder
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.d("ANDROID", "on error");
-        //updatePlayerState(PlayerState.ERROR);
 
+        //updatePlayerState(PlayerState.ERROR);
         // Create update audio player state message.
         Message updateAudioPlayerStateMessage = new Message();
 
@@ -308,15 +306,9 @@ public class AudioServiceBinder
                 errorMessage = "MEDIA_ERROR_UNKNOWN: Unspecified media player error";
                 break;
         }
-
         Log.e("AudioServiceBinder", errorMessage, null);
-
-
         updateAudioPlayerStateMessage.obj = errorMessage;
-
-        // Send the message to caller activity's update audio Handler object.
         audioProgressUpdateHandler.sendMessage(updateAudioPlayerStateMessage);
-
         return false;
     }
 
@@ -400,9 +392,7 @@ public class AudioServiceBinder
     }
 
     private void updateNotification(long capabilities) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             createNotificationChannel();
         }
 

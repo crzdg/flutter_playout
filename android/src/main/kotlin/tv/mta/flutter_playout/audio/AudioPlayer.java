@@ -73,6 +73,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             mMediaNotificationManagerService = null;
         }
     };
+
     /* This service connection object is the bridge between activity and background service. */
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -192,7 +193,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private void dispose() {
         try {
-            //audioServiceBinder.disposeAudio();
+            audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
         } catch (Exception e) { /* ignore */ }
@@ -301,8 +302,10 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                     service.notifyDart("onPausing");
                 }
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_COMPLETE) {
-                    service.audioServiceBinder = null;
                     service.notifyDart("onComplete");
+                }
+                else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_ERROR) {
+                    service.notifyDartOnError(msg.obj);
                 }
             }
         }
