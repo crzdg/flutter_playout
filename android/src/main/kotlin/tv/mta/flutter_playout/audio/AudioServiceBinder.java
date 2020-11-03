@@ -140,7 +140,6 @@ public class AudioServiceBinder
     }
 
     void startAudio() {
-        Log.d("startAudio", "startAudio");
         if (audioPlayer != null && audioPlayer.isPlaying() == false) {
             updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_START_PLAYING);
             audioPlayer.prepareAsync();
@@ -150,11 +149,8 @@ public class AudioServiceBinder
     }
 
     void pauseAudio() {
-        Log.d("ANDROID", "pauseAudio");
         if (audioPlayer != null) {
             if (audioPlayer.isPlaying()) {
-                Log.d("ANDROID", "isplaying");
-                //audioPlayer.pause();
                 audioPlayer.stop();
                 updatePlayerState(PlayerState.STOPPED);
             }
@@ -192,12 +188,12 @@ public class AudioServiceBinder
             if (!TextUtils.isEmpty(getAudioFileUrl())) {
                 audioPlayer.setDataSource(getAudioFileUrl());
                 updatePlayerState(PlayerState.INITIALIZED);
+                updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_READY);
             }
 
         } catch (IOException e){
             updatePlayerState(PlayerState.ERROR);
         }
-        updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_READY);
     }
 
     void initAudioPlayer() {
@@ -210,7 +206,6 @@ public class AudioServiceBinder
                 updatePlayerState(PlayerState.IDLE);
                 updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_INITIALIZED);
             }
-
             else {
                 updatePlayerState(PlayerState.ERROR);
             }
@@ -260,13 +255,12 @@ public class AudioServiceBinder
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.d("ANDROID", "on completion");
+        updateAudioProgressUpdateHandler(UPDATE_PLAYER_STATE_TO_COMPLETE);
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
-        //updatePlayerState(PlayerState.ERROR);
         // Create update audio player state message.
         Message updateAudioPlayerStateMessage = new Message();
 
