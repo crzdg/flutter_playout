@@ -45,7 +45,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             try audioSession.setActive(true)
             print("sink oninit")
             self.flutterEventSink?(["name":"onInit"])
-        } catch _ { }
+        } catch {
+            print(error)
+        }
     }
 
     private func changeMediaInfo(arguments: NSDictionary) {
