@@ -305,7 +305,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
                     service.notifyDart("onComplete");
                 }
                 else if (msg.what == service.audioServiceBinder.UPDATE_PLAYER_STATE_TO_ERROR) {
-                    service.notifyDartOnError(msg.obj);
+                    service.notifyDartOnError((String) msg.obj);
                 }
             }
         }
