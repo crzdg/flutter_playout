@@ -45,12 +45,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
 
     private String subtitle;
 
-    private PlayerState playerState;
-
-    private int startPositionInMills;
-
-    private int mediaDuration = 0;
-
     /**
      * Whether we have bound to a {@link MediaNotificationManagerService}.
      */
@@ -83,23 +77,18 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            Log.d("ServiceConnection", "onServiceConnected");
             /* Cast and assign background service's onBind method returned iBinder object */
             audioServiceBinder = (AudioServiceBinder) iBinder;
             audioServiceBinder.setActivity(activity);
             audioServiceBinder.setContext(context);
             audioServiceBinder.setAudioProgressUpdateHandler(audioProgressUpdateHandler);
-            //audioServiceBinder.setAudioFileUrl(audioURL);
-            //audioServiceBinder.setTitle(title);
-            //audioServiceBinder.setSubtitle(subtitle);
-            //audioServiceBinder.pauseAudio();
-            //audioServiceBinder.startAudio(startPositionInMills);
             doBindMediaNotificationManagerService();
             initRadioPlayer();
         }
+
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            Log.d("ServiceConnection", "onServiceDisconnected");
+            audioServiceBinder = null;
         }
     };
 
@@ -160,9 +149,7 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         }
     }
 
-
     private void initRadioPlayer(){
-        Log.d("initRadioPlayer", "initRadioPlayer");
         audioServiceBinder.initAudioPlayer();
     }
 
@@ -183,7 +170,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
         audioServiceBinder.updateRadioInformations(this.title, this.subtitle);
         notifyDart("onChangeMediaInfo");
     }
-
 
     private void play() {
         if (audioServiceBinder != null) {
@@ -209,7 +195,6 @@ public class AudioPlayer implements MethodChannel.MethodCallHandler, EventChanne
             //audioServiceBinder.disposeAudio();
             unBoundAudioService();
             doUnbindMediaNotificationManagerService();
-            //audioServiceBinder = null;
         } catch (Exception e) { /* ignore */ }
     }
 

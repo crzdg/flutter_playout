@@ -221,7 +221,6 @@ public class AudioServiceBinder
     }
 
     public void disposeAudio() {
-        Log.d("ANDROID", "disposeAudio");
         try {
             cleanPlayerNotification();
             if (audioPlayer != null) {
