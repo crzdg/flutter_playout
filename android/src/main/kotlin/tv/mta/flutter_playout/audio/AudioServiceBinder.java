@@ -173,7 +173,7 @@ public class AudioServiceBinder
         setTitle(title);
         setSubtitle(subtitle);
         setAudioMetadata();
-        //updatePlayerState(this.playerState);
+        updatePlayerState(this.playerState);
     }
 
     void setupAudioPlayer(String url, String title, String subtitle) {
