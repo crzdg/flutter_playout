@@ -56,6 +56,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 self.title = _title
                 self.subtitle = _subtitle
                 updateNowPlayingInfoPanel()
+                self.flutterEventSink?(["name":"onChangeMediaInfo"])
                 }
             }
     }
@@ -381,6 +382,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func updateNowPlayingInfoPanel() {
         nowPlayingInfo[MPMediaItemPropertyTitle] = self.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = self.subtitle
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
 
     private func reset() {
