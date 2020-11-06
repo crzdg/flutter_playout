@@ -237,12 +237,15 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     @objc func onAVPlayerNewErrorLogEntry(_ notification: Notification) {
         guard let object = notification.object, let playerItem = object as? AVPlayerItem else {
+            self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
         }
         guard let error: AVPlayerItemErrorLog = playerItem.errorLog() else {
+            self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
         }
         guard var errorMessage = error.extendedLogData() else {
+            self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
         }
         errorMessage.removeLast()
@@ -251,6 +254,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     @objc func onAVPlayerFailedToPlayToEndTime(_ notification: Notification) {
         guard let error = notification.userInfo!["AVPlayerItemFailedToPlayToEndTimeErrorKey"] else {
+            self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
         }
         self.flutterEventSink?(["name":"onError", "error":error])
