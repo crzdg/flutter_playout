@@ -125,7 +125,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                         center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)),
                                             name: .AVPlayerItemFailedToPlayToEndTime,
                                             object: audioPlayer.currentItem)
-
                         /* Add observer for AVPlayer status and AVPlayerItem status */
                         self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
                                                         options: [.new, .initial], context: nil)
@@ -236,6 +235,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     @objc func onAVPlayerNewErrorLogEntry(_ notification: Notification) {
+        self.flutterEventSink?(["name":"onError", "error":"unknown error"])
         guard let object = notification.object, let playerItem = object as? AVPlayerItem else {
             self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
@@ -257,7 +257,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
         }
-        self.flutterEventSink?(["name":"onError", "error":error])
+        self.flutterEventSink?(["name":"onError", "error":"failed to end"])
     }
 
     private func setupRemoteTransportControls() {
