@@ -235,7 +235,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     @objc func onAVPlayerNewErrorLogEntry(_ notification: Notification) {
-        self.flutterEventSink?(["name":"onError", "error":"unknown error"])
         guard let object = notification.object, let playerItem = object as? AVPlayerItem else {
             self.flutterEventSink?(["name":"onError", "error":"unknown error"])
             return
