@@ -47,7 +47,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func _initPlayer() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            audioSession.setActive(true)
+            try audioSession.setActive(true)
         } catch {
             self.flutterEventSink?(["name":"onError", "error":"could not play"])
         }
