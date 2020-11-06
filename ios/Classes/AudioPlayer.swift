@@ -46,7 +46,11 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func _initPlayer() {
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setActive(true)
+        do {
+            audioSession.setActive(true)
+        } catch {
+            self.flutterEventSink?(["name":"onError", "error":"could not play"])
+        }
     }
 
     private func changeMediaInfo(arguments: NSDictionary) {
@@ -64,7 +68,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         self._play()
         audioPlayer.play()
         self.flutterEventSink?(["name":"onStartPlaying"])
-        self.flutterEventSink?(["name":"onError", "error":"could not play"])
         updateInfoPanelOnPlay()
 
     }
