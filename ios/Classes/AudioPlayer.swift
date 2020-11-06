@@ -193,7 +193,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     @objc func onComplete(_ notification: Notification) {
         pause()
         self.flutterEventSink?(["name":"onComplete"])
-        //seekTo(seconds: 0.0)
         updateInfoPanelOnComplete()
     }
 
@@ -205,6 +204,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 newStatus = AVPlayerItem.Status(rawValue: newStatusAsNumber.intValue)!
             } else {
                 newStatus = .unknown
+                self.flutterEventSink?(["name":"onError", "error":"unknown status"])
             }
 
             if newStatus == .failed {
