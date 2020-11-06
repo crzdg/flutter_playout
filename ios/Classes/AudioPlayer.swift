@@ -297,10 +297,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func reset() {
+        self.flutterEventSink?(["name":"onReset"])
         audioPlayer.pause()
         _setup()
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-        self.flutterEventSink?(["name":"onReset"])
     }
 
     private func teardown() {
