@@ -39,12 +39,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func initPlayer() {
         print("init player ")
-        do {
-            _initPlayer()
-            print("sink oninit")
-            self.flutterEventSink?(["name":"onInit"])
-        } catch {
-            self.flutterEventSink?(["name":"onError", "error":"could not init"])
+        _initPlayer()
+        print("sink oninit")
+        self.flutterEventSink?(["name":"onInit"])
         }
     }
 
@@ -65,13 +62,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func play() {
-        do {
-            self._play()
-            audioPlayer.play()
-            self.flutterEventSink?(["name":"onStartPlaying"])
-        } catch {
-            self.flutterEventSink?(["name":"onError", "error":"could not play"])
-        }
+        self._play()
+        audioPlayer.play()
+        self.flutterEventSink?(["name":"onStartPlaying"])
+        self.flutterEventSink?(["name":"onError", "error":"could not play"])
         updateInfoPanelOnPlay()
 
     }
