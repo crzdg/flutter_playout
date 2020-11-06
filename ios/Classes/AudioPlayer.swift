@@ -42,7 +42,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         _initPlayer()
         print("sink oninit")
         self.flutterEventSink?(["name":"onInit"])
-        }
     }
 
     private func _initPlayer() {
