@@ -214,6 +214,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if newStatus == .failed {
                 self.flutterEventSink?(["name":"onError", "error":(String(describing: self.audioPlayer.currentItem?.error))])
             }
+            else if newStatus == .readyToPlay {
+                self.flutterEventSink?(["name":"onReady"])
+            }
         }
 
         else if keyPath == #keyPath(AVPlayer.timeControlStatus) {
@@ -224,9 +227,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if #available(iOS 10.0, *) {
                 switch (p.timeControlStatus) {
                 case AVPlayerTimeControlStatus.paused:
-                    if (doSendOnPausing) {
-                        self.flutterEventSink?(["name":"onPausing"])
-                    }
+                    self.flutterEventSink?(["name":"onPausing"])
                     break
                 case AVPlayerTimeControlStatus.playing:
                     self.flutterEventSink?(["name":"onPlaying"])
