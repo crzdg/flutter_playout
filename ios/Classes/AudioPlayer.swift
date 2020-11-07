@@ -73,7 +73,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func pause() {
         audioPlayer.pause()
-        self.flutterEventSink?(["name":"onPausing"])
+        //self.flutterEventSink?(["name":"onPausing"])
         self._setup()
         updateInfoPanelOnPause()
     }
