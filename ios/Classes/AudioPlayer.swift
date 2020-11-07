@@ -118,28 +118,34 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             let asset = AVAsset(url: _url)
                 if (asset.isPlayable) {
                         audioPlayer = AVPlayer(url: _url)
-                        let center = NotificationCenter.default
-                        center.addObserver(self, selector: #selector(onComplete(_:)),
-                                            name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                                            object: self.audioPlayer.currentItem)
-                        center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)),
-                                            name: .AVPlayerItemNewErrorLogEntry,
-                                            object: audioPlayer.currentItem)
-                        center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)),
-                                            name: .AVPlayerItemFailedToPlayToEndTime,
-                                            object: audioPlayer.currentItem)
-                        /* Add observer for AVPlayer status and AVPlayerItem status */
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
-                                                        options: [.new, .initial], context: nil)
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status),
-                                                        options:[.old, .new, .initial], context: nil)
-                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
-                                                        options:[.old, .new, .initial], context: nil)
-                        setupRemoteTransportControls();
                         setupNowPlayingInfoPanel()
                     }
                     audioPlayer.play()
                 }
+    }
+
+    private func _initObservers() {
+        if (observersInitialized == false) {
+            let center = NotificationCenter.default
+            center.addObserver(self, selector: #selector(onComplete(_:)),
+                                name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                object: self.audioPlayer.currentItem)
+            center.addObserver(self, selector:#selector(onAVPlayerNewErrorLogEntry(_:)),
+                                name: .AVPlayerItemNewErrorLogEntry,
+                                object: audioPlayer.currentItem)
+            center.addObserver(self, selector:#selector(onAVPlayerFailedToPlayToEndTime(_:)),
+                                name: .AVPlayerItemFailedToPlayToEndTime,
+                                object: audioPlayer.currentItem)
+            /* Add observer for AVPlayer status and AVPlayerItem status */
+            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
+                                            options: [.new, .initial], context: nil)
+            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status),
+                                            options:[.old, .new, .initial], context: nil)
+            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
+                                            options:[.old, .new, .initial], context: nil)
+            setupRemoteTransportControls();
+            observersInitialized = true;
+        }
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -182,7 +188,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var audioPlayer = AVPlayer()
     private var timeObserverToken:Any?
 
-    private var remoteObserverInitialized = false;
+    private var observersInitialized = false;
 
     /* Flutter event streamer properties */
     private var eventChannel:FlutterEventChannel?
@@ -213,9 +219,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
             if newStatus == .failed {
                 self.flutterEventSink?(["name":"onError", "error":(String(describing: self.audioPlayer.currentItem?.error))])
-            }
-            else if newStatus == .readyToPlay {
-                self.flutterEventSink?(["name":"onReady"])
             }
         }
 
@@ -268,42 +271,40 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func setupRemoteTransportControls() {
-        if (remoteObserverInitialized == false) {
-            let commandCenter = MPRemoteCommandCenter.shared()
-            //commandCenter.playCommand.isEnabled = true
-            //commandCenter.pauseCommand.isEnabled = true
-            //remoteObserverInitialized = true
-            commandCenter.playCommand.addTarget { [unowned self] event in
-                if self.audioPlayer.rate == 0.0 {
-                    self.play()
-                    print("play button")
-                    return .success
-                }
-                return .commandFailed
+        let commandCenter = MPRemoteCommandCenter.shared()
+        //commandCenter.playCommand.isEnabled = true
+        //commandCenter.pauseCommand.isEnabled = true
+        //remoteObserverInitialized = true
+        commandCenter.playCommand.addTarget { [unowned self] event in
+            if self.audioPlayer.rate == 0.0 {
+                self.play()
+                print("play button")
+                return .success
             }
+            return .commandFailed
+        }
 
-            commandCenter.togglePlayPauseCommand.addTarget { [unowned self] event in
-                if self.audioPlayer.rate == 0.0 {
-                    //self.play()
-                    print("play")
-                    return .success
-                } else if self.audioPlayer.rate == 1.0 {
-                    self.pause()
-                    print("pause")
-                    return .success
-                }
-                return .commandFailed
+        commandCenter.togglePlayPauseCommand.addTarget { [unowned self] event in
+            if self.audioPlayer.rate == 0.0 {
+                //self.play()
+                print("play")
+                return .success
+            } else if self.audioPlayer.rate == 1.0 {
+                self.pause()
+                print("pause")
+                return .success
             }
+            return .commandFailed
+        }
 
-            // Add handler for Pause Command
-            commandCenter.pauseCommand.addTarget { [unowned self] event in
-                if self.audioPlayer.rate == 1.0 {
-                    self.pause()
-                    print("pause button")
-                    return .success
-                }
-                return .commandFailed
+        // Add handler for Pause Command
+        commandCenter.pauseCommand.addTarget { [unowned self] event in
+            if self.audioPlayer.rate == 1.0 {
+                self.pause()
+                print("pause button")
+                return .success
             }
+            return .commandFailed
         }
     }
 
