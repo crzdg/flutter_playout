@@ -118,6 +118,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             let asset = AVAsset(url: _url)
                 if (asset.isPlayable) {
                         audioPlayer = AVPlayer(url: _url)
+                        _initObservers();
                         setupNowPlayingInfoPanel()
                     }
                     audioPlayer.play()
