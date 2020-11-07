@@ -64,15 +64,14 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
     }
 
-    public func play() {
+    private func play() {
         self._play()
-        audioPlayer.play()
         self.flutterEventSink?(["name":"onStartPlaying"])
         updateInfoPanelOnPlay()
 
     }
 
-    public func pause() {
+    private func pause() {
         audioPlayer.pause()
         self.flutterEventSink?(["name":"onPausing"])
         self._setup()
@@ -278,11 +277,11 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
             commandCenter.togglePlayPauseCommand.addTarget { [unowned self] event in
                 if self.audioPlayer.rate == 0.0 {
-                    //self.play()
+                    self.play()
                     print("play")
                     return .success
                 } else if self.audioPlayer.rate == 1.0 {
-                    //self.pause()
+                    self.pause()
                     print("pause")
                 }
                 return .commandFailed
