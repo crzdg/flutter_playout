@@ -264,8 +264,11 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func setupRemoteTransportControls() {
         if (remoteObserverInitialized == false) {
             let commandCenter = MPRemoteCommandCenter.shared()
-
+            commandCenter.playCommand.isEnabled = true
+            commandCenter.pauseCommand.isEnabled = true
             // Add handler for Play Command
+            //commandCenter.playCommand.addTarget(self, action: #selector(self.play(_:)))
+            //commandCenter.pauseCommand.addTarget(self, action: #selector(self.play(_:)))
             commandCenter.playCommand.addTarget { event in
                 if self.audioPlayer.rate == 0.0 {
                     self.play()
