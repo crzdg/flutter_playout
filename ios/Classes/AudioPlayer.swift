@@ -264,14 +264,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private func setupRemoteTransportControls() {
         if (remoteObserverInitialized == false) {
             let commandCenter = MPRemoteCommandCenter.shared()
-            commandCenter.playCommand.isEnabled = true
-            commandCenter.pauseCommand.isEnabled = true
-            // Add handler for Play Command
-            commandCenter.playCommand.addTarget(self, action: #selector(self.play(_:)))
-            commandCenter.pauseCommand.addTarget(self, action: #selector(self.pause(_:)))
-            remoteObserverInitialized = true
-            /*
-            commandCenter.playCommand.addTarget { event in
+            //commandCenter.playCommand.isEnabled = true
+            //commandCenter.pauseCommand.isEnabled = true
+            //remoteObserverInitialized = true
+            commandCenter.playCommand.addTarget { [unowned self] event in
                 if self.audioPlayer.rate == 0.0 {
                     self.play()
                     print("play button")
@@ -281,7 +277,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
 
             // Add handler for Pause Command
-            commandCenter.pauseCommand.addTarget { event in
+            commandCenter.pauseCommand.addTarget { [unowned self] event in
                 if self.audioPlayer.rate == 1.0 {
                     self.pause()
                     print("pause button")
@@ -289,7 +285,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 }
                 return .commandFailed
             }
-            */
         }
     }
 
