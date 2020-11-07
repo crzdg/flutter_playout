@@ -221,7 +221,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if #available(iOS 10.0, *) {
                 switch (p.timeControlStatus) {
                 case AVPlayerTimeControlStatus.paused:
-                    self.flutterEventSink?(["name":"onPause"])
+                    self.flutterEventSink?(["name":"onPausing"])
                     break
                 case AVPlayerTimeControlStatus.playing:
                     self.flutterEventSink?(["name":"onPlaying"])
@@ -272,6 +272,18 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     self.play()
                     print("play button")
                     return .success
+                }
+                return .commandFailed
+            }
+
+            commandCenter.togglePlayPauseCommand.addTarget { [unowned self] event in
+                if self.audioPlayer.rate == 0.0 {
+                    self.play()
+                    print("play")
+                    return .success
+                } else if self.audioPlayer.rate == 1.0 {
+                    self.pause()
+                    print("pause")
                 }
                 return .commandFailed
             }
