@@ -283,6 +283,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 } else if self.audioPlayer.rate == 1.0 {
                     self.pause()
                     print("pause")
+                    return .success
                 }
                 return .commandFailed
             }
