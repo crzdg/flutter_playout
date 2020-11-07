@@ -454,13 +454,13 @@ public class AudioServiceBinder
         @Override
         public void onPause() {
             Log.d("MediaSessionCallback", "onPause");
-            //pauseAudio();
+            pauseAudio();
         }
 
         @Override
         public void onPlay() {
             Log.d("MediaSessionCallback", "onPlay");
-            //startAudio();
+            startAudio();
         }
 
         @Override
