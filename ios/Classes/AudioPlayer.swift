@@ -64,7 +64,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             }
     }
 
-    private func play() {
+    public func play() {
         self._play()
         audioPlayer.play()
         self.flutterEventSink?(["name":"onStartPlaying"])
@@ -72,7 +72,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     }
 
-    private func pause() {
+    public func pause() {
         audioPlayer.pause()
         self.flutterEventSink?(["name":"onPausing"])
         self._setup()
@@ -268,7 +268,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             commandCenter.pauseCommand.isEnabled = true
             // Add handler for Play Command
             commandCenter.playCommand.addTarget(self, action: #selector(self.play(_:)))
-            commandCenter.pauseCommand.addTarget(self, action: #selector(self.play(_:)))
+            commandCenter.pauseCommand.addTarget(self, action: #selector(self.pause(_:)))
             remoteObserverInitialized = true
             /*
             commandCenter.playCommand.addTarget { event in
