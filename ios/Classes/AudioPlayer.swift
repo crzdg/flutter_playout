@@ -73,7 +73,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     private func pause() {
         audioPlayer.pause()
-        //self.flutterEventSink?(["name":"onPausing"])
         self._setup()
         updateInfoPanelOnPause()
     }
@@ -118,6 +117,12 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             let asset = AVAsset(url: _url)
                 if (asset.isPlayable) {
                         audioPlayer = AVPlayer(url: _url)
+                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
+                                            options: [.new, .initial], context: nil)
+                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status),
+                                            options:[.old, .new, .initial], context: nil)
+                        self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
+                                            options:[.old, .new, .initial], context: nil)
                         _initObservers();
                         setupNowPlayingInfoPanel()
                     }
@@ -138,12 +143,6 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                                 name: .AVPlayerItemFailedToPlayToEndTime,
                                 object: audioPlayer.currentItem)
             /* Add observer for AVPlayer status and AVPlayerItem status */
-            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status),
-                                            options: [.new, .initial], context: nil)
-            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status),
-                                            options:[.old, .new, .initial], context: nil)
-            self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
-                                            options:[.old, .new, .initial], context: nil)
             setupRemoteTransportControls();
             observersInitialized = true;
         }
