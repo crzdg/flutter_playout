@@ -132,7 +132,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                                                         options:[.old, .new, .initial], context: nil)
                         self.audioPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus),
                                                         options:[.old, .new, .initial], context: nil)
-                        setupRemoteTransportControls()
+                        if (commandCenter == null) {
+                            setupRemoteTransportControls();
+                        }
                         setupNowPlayingInfoPanel()
                     }
                     audioPlayer.play()
