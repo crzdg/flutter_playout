@@ -269,6 +269,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             commandCenter.playCommand.addTarget { event in
                 if self.audioPlayer.rate == 0.0 {
                     self.play()
+                    print("play button")
                     return .success
                 }
                 return .commandFailed
@@ -278,6 +279,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             commandCenter.pauseCommand.addTarget { event in
                 if self.audioPlayer.rate == 1.0 {
                     self.pause()
+                    print("pause button")
                     return .success
                 }
                 return .commandFailed
