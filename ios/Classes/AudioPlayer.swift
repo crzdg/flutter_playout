@@ -267,8 +267,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             commandCenter.playCommand.isEnabled = true
             commandCenter.pauseCommand.isEnabled = true
             // Add handler for Play Command
-            //commandCenter.playCommand.addTarget(self, action: #selector(self.play(_:)))
-            //commandCenter.pauseCommand.addTarget(self, action: #selector(self.play(_:)))
+            commandCenter.playCommand.addTarget(self, action: #selector(self.play(_:)))
+            commandCenter.pauseCommand.addTarget(self, action: #selector(self.play(_:)))
+            remoteObserverInitialized = true
+            /*
             commandCenter.playCommand.addTarget { event in
                 if self.audioPlayer.rate == 0.0 {
                     self.play()
@@ -287,7 +289,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 }
                 return .commandFailed
             }
-            remoteObserverInitialized = true
+            */
         }
     }
 
