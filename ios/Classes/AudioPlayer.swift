@@ -277,11 +277,11 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
 
             commandCenter.togglePlayPauseCommand.addTarget { [unowned self] event in
                 if self.audioPlayer.rate == 0.0 {
-                    self.play()
+                    //self.play()
                     print("play")
                     return .success
                 } else if self.audioPlayer.rate == 1.0 {
-                    self.pause()
+                    //self.pause()
                     print("pause")
                     return .success
                 }
