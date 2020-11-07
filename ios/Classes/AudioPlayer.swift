@@ -181,6 +181,8 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     private var audioPlayer = AVPlayer()
     private var timeObserverToken:Any?
 
+    private var remoteObserverInitialized = false;
+
     /* Flutter event streamer properties */
     private var eventChannel:FlutterEventChannel?
     private var flutterEventSink:FlutterEventSink?
@@ -262,24 +264,27 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func setupRemoteTransportControls() {
-        let commandCenter = MPRemoteCommandCenter.shared()
+        if (remoteObserverInitialized == false) {
+            let commandCenter = MPRemoteCommandCenter.shared()
 
-        // Add handler for Play Command
-        commandCenter.playCommand.addTarget { event in
-            if self.audioPlayer.rate == 0.0 {
-                self.play()
-                return .success
+            // Add handler for Play Command
+            commandCenter.playCommand.addTarget { event in
+                if self.audioPlayer.rate == 0.0 {
+                    self.play()
+                    return .success
+                }
+                return .commandFailed
             }
-            return .commandFailed
-        }
 
-        // Add handler for Pause Command
-        commandCenter.pauseCommand.addTarget { event in
-            if self.audioPlayer.rate == 1.0 {
-                self.pause()
-                return .success
+            // Add handler for Pause Command
+            commandCenter.pauseCommand.addTarget { event in
+                if self.audioPlayer.rate == 1.0 {
+                    self.pause()
+                    return .success
+                }
+                return .commandFailed
             }
-            return .commandFailed
+            remoteObserverInitialized = true
         }
     }
 
