@@ -326,6 +326,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
     }
 
     private func teardown() {
+        print("teardown")
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         if let timeObserver = timeObserverToken {
             audioPlayer.removeTimeObserver(timeObserver)
