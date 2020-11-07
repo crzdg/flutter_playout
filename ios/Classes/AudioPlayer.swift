@@ -84,7 +84,10 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
         return;
     }
 
+    private var doSendOnPausing = true;
+
     private func _setup(){
+        doSendOnPausing = false
         if let _url = URL(string: self.url) {
             let asset = AVAsset(url: _url)
             if (asset.isPlayable) {
@@ -94,6 +97,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                 self.flutterEventSink?(["name":"onError", "error":"asset not playable"])
             }
         }
+        doSendOnPausing = true
     }
 
     private func setup(arguments: NSDictionary) {
@@ -220,7 +224,9 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
             if #available(iOS 10.0, *) {
                 switch (p.timeControlStatus) {
                 case AVPlayerTimeControlStatus.paused:
-                    self.flutterEventSink?(["name":"onPausing"])
+                    if (doSendOnPausing) {
+                        self.flutterEventSink?(["name":"onPausing"])
+                    }
                     break
                 case AVPlayerTimeControlStatus.playing:
                     self.flutterEventSink?(["name":"onPlaying"])
@@ -281,7 +287,7 @@ class AudioPlayer: NSObject, FlutterPlugin, FlutterStreamHandler {
                     print("play")
                     return .success
                 } else if self.audioPlayer.rate == 1.0 {
-                    //self.pause()
+                    self.pause()
                     print("pause")
                     return .success
                 }
